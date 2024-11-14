@@ -1,6 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flappy_bird/game.dart';
+import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
 
 class Ground extends SpriteComponent with HasGameRef<FlappyBirdGame> {

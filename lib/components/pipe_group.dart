@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:flappy_bird/components/pipe.dart';
-import 'package:flappy_bird/game.dart';
+import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
 
 class PipeGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
@@ -22,6 +22,7 @@ class PipeGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
         Pipe(pipePosition: PipePosition.bottom, height: heightMinusGround - (centerY + spacing / 2),),
       ]
     );
+    priority = 2;
   }
 
   @override

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flappy_bird/game.dart';
+import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
 
 enum PipePosition { top, bottom }
@@ -31,7 +31,7 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyBirdGame> {
         sprite = Sprite(pipe);
         break;
     }
-
+    priority = 2;
     add(RectangleHitbox());
   }
 }

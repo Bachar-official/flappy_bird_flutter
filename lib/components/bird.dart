@@ -1,14 +1,13 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flappy_bird/game.dart';
+import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flutter/animation.dart';
 
 class Bird extends SpriteAnimationComponent
-    with HasGameReference<FlappyBirdGame> {
+    with HasGameReference<FlappyBirdGame>, CollisionCallbacks {
   bool isAnimating = false;
-  int score = 0;
 
   late SpriteAnimation idleAnimation;
   late SpriteAnimation flyAnimation;
@@ -74,5 +73,16 @@ class Bird extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
     position.y += Config.birdVelocity * dt;
+  }
+
+  @override
+  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollisionStart(intersectionPoints, other);
+    game.overlays.add('gameOver');
+    game.pauseEngine();
+  }
+
+  void reset() {
+    position = Vector2(128, 0 + 128);
   }
 }

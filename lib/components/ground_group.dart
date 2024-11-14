@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flappy_bird/components/ground.dart';
-import 'package:flappy_bird/game.dart';
+import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
 
 class GroundGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
