@@ -7,6 +7,7 @@ import 'package:flappy_bird/components/cloud_group.dart';
 import 'package:flappy_bird/components/ground_group.dart';
 import 'package:flappy_bird/components/pipe_group.dart';
 import 'package:flappy_bird/game/config.dart';
+import 'package:flappy_bird/utils/calculate_volume.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late Bird _bird;
@@ -19,6 +20,13 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   String playerName = '';
 
   void setPlayerName(String name) => playerName = name;
+  void setAudioStream(Stream<dynamic> stream) {
+    stream.listen((event) {
+      if (calculateVolume(event) < 145) {
+        _bird.jump();
+      }
+    });
+  }
 
   @override
   Future<void> onLoad() async {

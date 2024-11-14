@@ -18,26 +18,6 @@ class _MainScreenState extends State<MainScreen> {
   final record = AudioRecorder();
   late final Stream audioStream;
 
-  double calculateVolume(List<int> data) {
-    final buffer = Int16List.fromList(data); // Преобразуем данные в 16-битные целые
-    double sum = 0.0;
-
-    // Суммируем квадраты значений для RMS
-    for (var sample in buffer) {
-      sum += sample * sample;
-    }
-
-    // Рассчитываем среднеквадратичное значение (RMS)
-    double rms = sqrt(sum / buffer.length);
-    
-    // Нормализуем результат
-    double normalizedVolume = (rms / 32768).clamp(0.0, 1.0);
-    if (normalizedVolume > 0.006) {
-      print('CLICK!!!');
-    }
-    return normalizedVolume;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -47,10 +27,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void setStream() async {
-    audioStream = await record.startStream(const RecordConfig(encoder: AudioEncoder.pcm16bits));
-    audioStream.listen((data) {
-      print(calculateVolume(data));
-    });
+    audioStream = await record
+        .startStream(const RecordConfig(encoder: AudioEncoder.pcm16bits));
   }
 
   @override
@@ -63,16 +41,21 @@ class _MainScreenState extends State<MainScreen> {
             Padding(
               padding: const EdgeInsets.all(50.0),
               child: TextFormField(
-                decoration: const InputDecoration(label: Text('Имя игрока'),),
+                decoration: const InputDecoration(
+                  label: Text('Имя игрока'),
+                ),
                 controller: nameC,
               ),
             ),
             ElevatedButton(
-              onPressed: nameC.value.text.isEmpty ? null : () {
-                widget.game.overlays.remove('mainMenu');
-                widget.game.setPlayerName(nameC.value.text);
-                widget.game.resumeEngine();
-              },
+              onPressed: nameC.value.text.isEmpty
+                  ? null
+                  : () {
+                      widget.game.overlays.remove('mainMenu');
+                      widget.game.setPlayerName(nameC.value.text);
+                      widget.game.setAudioStream(audioStream);
+                      widget.game.resumeEngine();
+                    },
               child: const Text('Начать игру'),
             ),
           ],

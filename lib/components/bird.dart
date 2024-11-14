@@ -73,10 +73,15 @@ class Bird extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
     position.y += Config.birdVelocity * dt;
+    if (position.y > game.size.y) {
+      game.overlays.add('gameOver');
+      game.pauseEngine();
+    }
   }
 
   @override
-  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
     game.overlays.add('gameOver');
     game.pauseEngine();
