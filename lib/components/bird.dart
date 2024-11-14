@@ -5,6 +5,9 @@ import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flutter/animation.dart';
 
+import 'ground.dart';
+import 'pipe.dart';
+
 class Bird extends SpriteAnimationComponent
     with HasGameReference<FlappyBirdGame>, CollisionCallbacks {
   bool isAnimating = false;
@@ -83,8 +86,10 @@ class Bird extends SpriteAnimationComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
-    game.overlays.add('gameOver');
-    game.pauseEngine();
+    if (other is Ground || other is Pipe) {
+      game.overlays.add('gameOver');
+      game.pauseEngine();
+    }
   }
 
   void reset() {

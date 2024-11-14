@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flappy_bird/game/game.dart';
+import 'package:flappy_bird/utils/calculate_volume.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 
@@ -14,9 +16,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  double triggerCoefficient = 1;
   final TextEditingController nameC = TextEditingController(text: '');
+  StreamController controller = StreamController.broadcast();
   final record = AudioRecorder();
   late final Stream audioStream;
+  bool triggered = false;
 
   @override
   void initState() {
@@ -24,11 +29,22 @@ class _MainScreenState extends State<MainScreen> {
     widget.game.pauseEngine();
     nameC.addListener(() => setState(() {}));
     setStream();
+    readData();
   }
 
   void setStream() async {
-    audioStream = await record
-        .startStream(const RecordConfig(encoder: AudioEncoder.pcm16bits));
+    audioStream = await record.startStream(const RecordConfig(
+        encoder: AudioEncoder.pcm16bits, noiseSuppress: true));
+    await for (var a in audioStream) {
+      var value = 1000 / calculateVolume(a) * triggerCoefficient;
+      controller.add(value > 10);
+    }
+  }
+
+  void readData() async {
+    await for (var a in controller.stream) {
+      print(a);
+    }
   }
 
   @override
@@ -58,6 +74,28 @@ class _MainScreenState extends State<MainScreen> {
                     },
               child: const Text('Начать игру'),
             ),
+            Slider(
+              min: 0.5,
+              max: 2.0,
+              value: triggerCoefficient,
+              onChanged: (value) => setState(() => triggerCoefficient = value),
+            ),
+            const Text('Порог срабатывания'),
+            StreamBuilder(
+                stream: controller.stream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: ColoredBox(
+                        color: snapshot.data ? Colors.green : Colors.red,
+                      ),
+                    );
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                }),
           ],
         ),
       ),

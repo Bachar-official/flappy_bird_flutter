@@ -20,12 +20,12 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   String playerName = '';
 
   void setPlayerName(String name) => playerName = name;
-  void setAudioStream(Stream<dynamic> stream) {
-    stream.listen((event) {
-      if (calculateVolume(event) < 145) {
+  void setAudioStream(Stream<dynamic> stream) async {
+    await for (var event in stream) {
+      if (calculateVolume(event) < 140) {
         _bird.jump();
       }
-    });
+    }
   }
 
   @override
@@ -48,7 +48,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       removeAll(children);
     }
     _bird = Bird(
-      position: Vector2(128, 0 + 128),
+      position: Vector2(128, 128),
     );
 
     addAll([

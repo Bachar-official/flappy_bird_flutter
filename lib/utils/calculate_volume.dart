@@ -15,3 +15,22 @@ double calculateVolume(List<int> data) {
   double rms = sqrt(sum / buffer.length);
   return rms;
 }
+
+double calculateVolumeLn(List<int> data) {
+  final buffer = Int16List.fromList(data);
+  double sum = 0.0;
+
+  for (var sample in buffer) {
+    sum += sample * sample;
+  }
+
+  double rms = sqrt(sum / buffer.length);
+
+  // Логарифмическое преобразование для громкости в децибелах
+  double volumeDb = 20 * log(rms);
+
+  // Ограничиваем результат, чтобы избежать отрицательных значений
+  volumeDb = volumeDb.isNaN || volumeDb < 0 ? 0 : volumeDb;
+
+  return volumeDb;
+}
