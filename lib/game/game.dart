@@ -1,6 +1,8 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flappy_bird/components/bonuses/hour.dart';
+import 'package:flappy_bird/components/bonuses/utils/hour_data.dart';
 import 'package:flappy_bird/components/enemies/thorn.dart';
 import 'package:flappy_bird/components/enemies/thorn_position.dart';
 import 'package:flappy_bird/components/enemies/utils/thorn_data.dart';
@@ -24,6 +26,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   int score = 0;
   String playerName = '';
   List<ThornData> thorns = [];
+  List<HourData> hours = [];
 
   void setPlayerName(String name) => playerName = name;
   void setAudioStream(Stream<dynamic> stream) async {
@@ -38,17 +41,20 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   Future<void> onLoad() async {
     await images.loadAll([
       'bird.png',
-      'pipe.png',
-      'pipe-rotated.png',
       'ground.png',
       'background.png',
       'cloud.png',
       'ceiling.png',
       'thorn.png',
       'thorn-rotated.png',
+      'hours-15.png',
+      'hours-30.png',
+      'hours-45.png',
+      'hours-60.png',
     ]);
     try {
       thorns = await loadThorns('thorns.json');
+      hours = await loadHours('hours.json');
     } catch (e) {
       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     }
@@ -85,12 +91,31 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
             Thorn(
               thornPosition:
                   thorn.bottom ? ThornPosition.bottom : ThornPosition.top,
-              height: thorn.height * 50,
+              height: thorn.height *
+                  (size.y - Config.ceilingHeight - Config.groundHeight) /
+                  100,
             ),
           );
         },
       );
       add(thornTimer);
+    }
+    for (var hour in hours) {
+      final hourTimer = TimerComponent(
+        period: hour.time,
+        onTick: () {
+          add(
+            Hour(
+              score: hour.score,
+              yPos: (size.y - Config.ceilingHeight - Config.groundHeight) -
+                  (size.y - Config.ceilingHeight - Config.groundHeight) /
+                      100 *
+                      hour.pos,
+            ),
+          );
+        },
+      );
+      add(hourTimer);
     }
   }
 

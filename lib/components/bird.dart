@@ -1,5 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flappy_bird/components/bonuses/hour.dart';
 import 'package:flappy_bird/components/enemies/thorn.dart';
 import 'package:flappy_bird/components/environment/ceiling.dart';
 import 'package:flappy_bird/game/game.dart';
@@ -109,6 +110,11 @@ class Bird extends SpriteAnimationComponent
       // Ограничиваем высоту птицы, если она столкнулась с потолком
       position.y = Config.ceilingHeight + size.y / 2;
       velocity.y = 0;
+    }
+
+    // Проверка коллизии с часами
+    if (other is Hour) {
+      game.score += other.score;
     }
     super.onCollision(points, other);
   }

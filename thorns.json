@@ -8,5 +8,10 @@
         "time": 2.0,
         "height": 3.0,
         "bottom": true
-    }
+    },
+	{
+		"time": 4.0,
+        "height": 50.0,
+        "bottom": true
+	}
 ]
