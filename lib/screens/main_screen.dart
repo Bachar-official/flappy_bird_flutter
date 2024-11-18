@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/utils/calculate_volume.dart';
+import 'package:flappy_bird/utils/pipe_data.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 
@@ -22,6 +24,16 @@ class _MainScreenState extends State<MainScreen> {
   final record = AudioRecorder();
   late final Stream audioStream;
   bool triggered = false;
+  List<PipeData> pipes = [];
+
+  void init() async {
+    try {
+      pipes = await loadPipes('pipes.json');
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   @override
   void initState() {
@@ -30,6 +42,7 @@ class _MainScreenState extends State<MainScreen> {
     nameC.addListener(() => setState(() {}));
     setStream();
     readData();
+    init();
   }
 
   void setStream() async {
@@ -43,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void readData() async {
     await for (var a in controller.stream) {
-      print(a);
+      // print(a);
     }
   }
 
@@ -71,6 +84,7 @@ class _MainScreenState extends State<MainScreen> {
                       widget.game.setPlayerName(nameC.value.text);
                       widget.game.setAudioStream(audioStream);
                       widget.game.resumeEngine();
+                      widget.game.setPipes(pipes);
                     },
               child: const Text('Начать игру'),
             ),

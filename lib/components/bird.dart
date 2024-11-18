@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flutter/animation.dart';
@@ -19,7 +18,8 @@ class Bird extends SpriteAnimationComponent
       : super(size: Vector2.all(128), anchor: Anchor.center);
 
   Vector2 velocity = Vector2.zero();
-  double jumpStrength = -Config.gravity;
+  double jumpStrength = -400; // Увеличиваем силу прыжка
+  bool isOnGround = false;
 
   @override
   void onLoad() {
@@ -47,7 +47,7 @@ class Bird extends SpriteAnimationComponent
     animation = idleAnimation;
     size = Vector2(50, 40);
 
-    add(CircleHitbox());
+    add(CircleHitbox(anchor: Anchor.bottomRight));
   }
 
   void playAnimation() {
@@ -62,37 +62,47 @@ class Bird extends SpriteAnimationComponent
   }
 
   void jump() {
-    add(
-      MoveByEffect(
-        Vector2(0, -Config.gravity),
-        EffectController(duration: 0.2, curve: Curves.decelerate),
-      ),
-    );
-    velocity.y = jumpStrength;
+    isOnGround = false;
+    velocity.y =
+        -Config.gravity; // Устанавливаем отрицательную скорость для прыжка
     playAnimation();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    position.y += Config.birdVelocity * dt;
-    if (position.y > game.size.y) {
-      game.overlays.add('gameOver');
-      game.pauseEngine();
+
+    // Применяем гравитацию
+    velocity.y += Config.gravity * dt;
+    position.y += velocity.y * dt;
+
+    // Проверяем, не находится ли персонаж ниже уровня земли
+    if (position.y >= game.size.y - Config.groundHeight - size.y / 2) {
+      position.y = game.size.y - Config.groundHeight - size.y / 2;
+      isOnGround = true;
+      velocity.y = 0;
     }
   }
 
   @override
-  void onCollisionStart(
-      Set<Vector2> intersectionPoints, PositionComponent other) {
-    super.onCollisionStart(intersectionPoints, other);
-    if (other is Ground || other is Pipe) {
+  void onCollision(Set<Vector2> points, PositionComponent other) {
+    if (other is Pipe) {
       game.overlays.add('gameOver');
       game.pauseEngine();
     }
+
+    // Проверка коллизии с землёй
+    if (other is Ground) {
+      isOnGround = true;
+      velocity.y = 0;
+    }
+
+    super.onCollision(points, other);
   }
 
   void reset() {
     position = Vector2(128, 0 + 128);
+    isOnGround = false;
+    velocity = Vector2.zero();
   }
 }

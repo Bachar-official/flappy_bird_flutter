@@ -5,9 +5,11 @@ import 'package:flappy_bird/components/background.dart';
 import 'package:flappy_bird/components/bird.dart';
 import 'package:flappy_bird/components/cloud_group.dart';
 import 'package:flappy_bird/components/ground_group.dart';
+import 'package:flappy_bird/components/pipe.dart';
 import 'package:flappy_bird/components/pipe_group.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flappy_bird/utils/calculate_volume.dart';
+import 'package:flappy_bird/utils/pipe_data.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late Bird _bird;
@@ -18,15 +20,17 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   Timer scoreTimer = Timer(1, repeat: true);
   int score = 0;
   String playerName = '';
+  List<PipeData> pipes = [];
 
   void setPlayerName(String name) => playerName = name;
   void setAudioStream(Stream<dynamic> stream) async {
-    await for (var event in stream) {
-      if (calculateVolume(event) < 140) {
-        _bird.jump();
-      }
-    }
+    // await for (var event in stream) {
+    //   if (calculateVolume(event) < 140) {
+    //     _bird.jump();
+    //   }
+    // }
   }
+  void setPipes(List<PipeData> pipes) => this.pipes = pipes;
 
   @override
   Future<void> onLoad() async {
@@ -56,10 +60,19 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       _bird,
     ]);
 
-    interval.onTick = () => add(PipeGroup());
+    // interval.onTick = () => add(PipeGroup());
     groundInterval.onTick = () => add(GroundGroup());
     cloudInterval.onTick = () => add(CloudGroup());
     scoreTimer.onTick = () => score++;
+    print(pipes);
+    for (var pipe in pipes) {
+      Future.delayed(Duration(milliseconds: (pipe.time / 1000).toInt()), () {
+        add(Pipe(
+          pipePosition: pipe.bottom ? PipePosition.bottom : PipePosition.top,
+          height: pipe.height,
+        ));
+      });
+    }
   }
 
   @override

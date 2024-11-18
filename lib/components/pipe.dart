@@ -34,4 +34,10 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyBirdGame> {
     priority = 2;
     add(RectangleHitbox());
   }
+
+  @override
+  void update(dt) {
+    super.update(dt);
+    // if (position.x < -size.x) removeFromParent();
+  }
 }
