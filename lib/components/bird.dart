@@ -1,10 +1,11 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flappy_bird/components/environment/ceiling.dart';
 import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flutter/animation.dart';
 
-import 'ground.dart';
+import 'environment/ground.dart';
 import 'pipe.dart';
 
 class Bird extends SpriteAnimationComponent
@@ -47,7 +48,7 @@ class Bird extends SpriteAnimationComponent
     animation = idleAnimation;
     size = Vector2(50, 40);
 
-    add(CircleHitbox(anchor: Anchor.bottomRight));
+    add(CircleHitbox());
   }
 
   void playAnimation() {
@@ -82,6 +83,12 @@ class Bird extends SpriteAnimationComponent
       isOnGround = true;
       velocity.y = 0;
     }
+
+    // Проверка на столкновение с потолком (не даем птице выйти за пределы)
+    if (position.y <= Config.ceilingHeight + size.y / 2) {
+      position.y = Config.ceilingHeight + size.y / 2;
+      velocity.y = 0;
+    }
   }
 
   @override
@@ -97,6 +104,12 @@ class Bird extends SpriteAnimationComponent
       velocity.y = 0;
     }
 
+    // Проверка коллизии с потолком
+    if (other is Ceiling) {
+      // Ограничиваем высоту птицы, если она столкнулась с потолком
+      position.y = Config.ceilingHeight + size.y / 2;
+      velocity.y = 0;
+    }
     super.onCollision(points, other);
   }
 

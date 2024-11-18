@@ -16,13 +16,14 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyBirdGame> {
 
   @override
   FutureOr<void> onLoad() async {
+    position.x = game.size.x;
     final pipe = game.images.fromCache('pipe.png');
     final pipeRotated = game.images.fromCache('pipe-rotated.png');
     size = Vector2(80, height);
 
     switch (pipePosition) {
       case PipePosition.top:
-        position.y = 0;
+        position.y = Config.ceilingHeight;
         sprite = Sprite(pipeRotated);
         break;
 
@@ -36,8 +37,12 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyBirdGame> {
   }
 
   @override
-  void update(dt) {
+  void update(double dt) {
     super.update(dt);
-    // if (position.x < -size.x) removeFromParent();
+    position.x -= Config.gameSpeed * dt;
+
+    if (position.x < -(game.size.x + 50)) {
+      removeFromParent();
+    }
   }
 }

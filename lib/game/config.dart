@@ -5,4 +5,5 @@ abstract class Config {
   static const cloudHeight = 150.0;
   static const birdVelocity = 450.0;
   static const gravity = 150.0;
+  static const ceilingHeight = 50.0;
 }

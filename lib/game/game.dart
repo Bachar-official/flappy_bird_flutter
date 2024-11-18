@@ -1,15 +1,18 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flappy_bird/components/background.dart';
+import 'package:flappy_bird/components/environment/background.dart';
 import 'package:flappy_bird/components/bird.dart';
+import 'package:flappy_bird/components/environment/ceiling_group.dart';
 import 'package:flappy_bird/components/cloud_group.dart';
-import 'package:flappy_bird/components/ground_group.dart';
+import 'package:flappy_bird/components/environment/ground.dart';
+import 'package:flappy_bird/components/environment/ground_group.dart';
 import 'package:flappy_bird/components/pipe.dart';
 import 'package:flappy_bird/components/pipe_group.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flappy_bird/utils/calculate_volume.dart';
 import 'package:flappy_bird/utils/pipe_data.dart';
+import 'package:flutter/material.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late Bird _bird;
@@ -30,7 +33,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     //   }
     // }
   }
-  void setPipes(List<PipeData> pipes) => this.pipes = pipes;
 
   @override
   Future<void> onLoad() async {
@@ -41,7 +43,14 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       'ground.png',
       'background.png',
       'cloud.png',
+      'ceiling.png',
     ]);
+    try {
+      pipes = await loadPipes('pipes.json');
+    } catch (e) {
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+
     camera.viewfinder.anchor = Anchor.topLeft;
 
     initializeGame(true);
@@ -51,27 +60,39 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     if (!isFirstTime) {
       removeAll(children);
     }
+
     _bird = Bird(
       position: Vector2(128, 128),
     );
 
     addAll([
+      GroundGroup(),
+      CeilingGroup(),
       Background(),
       _bird,
     ]);
 
-    // interval.onTick = () => add(PipeGroup());
-    groundInterval.onTick = () => add(GroundGroup());
-    cloudInterval.onTick = () => add(CloudGroup());
+    // groundInterval.onTick = () => add(
+    //       GroundGroup(),
+    //     );
+    cloudInterval.onTick = () => add(
+          CloudGroup(),
+        );
     scoreTimer.onTick = () => score++;
-    print(pipes);
     for (var pipe in pipes) {
-      Future.delayed(Duration(milliseconds: (pipe.time / 1000).toInt()), () {
-        add(Pipe(
-          pipePosition: pipe.bottom ? PipePosition.bottom : PipePosition.top,
-          height: pipe.height,
-        ));
-      });
+      final pipeTimer = TimerComponent(
+        period: pipe.time,
+        onTick: () {
+          add(
+            Pipe(
+              pipePosition:
+                  pipe.bottom ? PipePosition.bottom : PipePosition.top,
+              height: pipe.height * 50,
+            ),
+          );
+        },
+      );
+      add(pipeTimer);
     }
   }
 

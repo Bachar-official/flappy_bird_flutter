@@ -24,16 +24,6 @@ class _MainScreenState extends State<MainScreen> {
   final record = AudioRecorder();
   late final Stream audioStream;
   bool triggered = false;
-  List<PipeData> pipes = [];
-
-  void init() async {
-    try {
-      pipes = await loadPipes('pipes.json');
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
-    }
-  }
 
   @override
   void initState() {
@@ -42,7 +32,6 @@ class _MainScreenState extends State<MainScreen> {
     nameC.addListener(() => setState(() {}));
     setStream();
     readData();
-    init();
   }
 
   void setStream() async {
@@ -84,7 +73,6 @@ class _MainScreenState extends State<MainScreen> {
                       widget.game.setPlayerName(nameC.value.text);
                       widget.game.setAudioStream(audioStream);
                       widget.game.resumeEngine();
-                      widget.game.setPipes(pipes);
                     },
               child: const Text('Начать игру'),
             ),
