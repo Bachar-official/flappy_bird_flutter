@@ -1,17 +1,17 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flappy_bird/components/enemies/thorn.dart';
+import 'package:flappy_bird/components/enemies/thorn_position.dart';
+import 'package:flappy_bird/components/enemies/utils/thorn_data.dart';
 import 'package:flappy_bird/components/environment/background.dart';
 import 'package:flappy_bird/components/bird.dart';
 import 'package:flappy_bird/components/environment/ceiling_group.dart';
 import 'package:flappy_bird/components/cloud_group.dart';
 import 'package:flappy_bird/components/environment/ground.dart';
 import 'package:flappy_bird/components/environment/ground_group.dart';
-import 'package:flappy_bird/components/pipe.dart';
-import 'package:flappy_bird/components/pipe_group.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flappy_bird/utils/calculate_volume.dart';
-import 'package:flappy_bird/utils/pipe_data.dart';
 import 'package:flutter/material.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
@@ -23,7 +23,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   Timer scoreTimer = Timer(1, repeat: true);
   int score = 0;
   String playerName = '';
-  List<PipeData> pipes = [];
+  List<ThornData> thorns = [];
 
   void setPlayerName(String name) => playerName = name;
   void setAudioStream(Stream<dynamic> stream) async {
@@ -44,9 +44,11 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       'background.png',
       'cloud.png',
       'ceiling.png',
+      'thorn.png',
+      'thorn-rotated.png',
     ]);
     try {
-      pipes = await loadPipes('pipes.json');
+      thorns = await loadThorns('thorns.json');
     } catch (e) {
       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     }
@@ -72,27 +74,23 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       _bird,
     ]);
 
-    // groundInterval.onTick = () => add(
-    //       GroundGroup(),
-    //     );
     cloudInterval.onTick = () => add(
           CloudGroup(),
         );
-    scoreTimer.onTick = () => score++;
-    for (var pipe in pipes) {
-      final pipeTimer = TimerComponent(
-        period: pipe.time,
+    for (var thorn in thorns) {
+      final thornTimer = TimerComponent(
+        period: thorn.time,
         onTick: () {
           add(
-            Pipe(
-              pipePosition:
-                  pipe.bottom ? PipePosition.bottom : PipePosition.top,
-              height: pipe.height * 50,
+            Thorn(
+              thornPosition:
+                  thorn.bottom ? ThornPosition.bottom : ThornPosition.top,
+              height: thorn.height * 50,
             ),
           );
         },
       );
-      add(pipeTimer);
+      add(thornTimer);
     }
   }
 

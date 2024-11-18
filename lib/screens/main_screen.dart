@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/utils/calculate_volume.dart';
-import 'package:flappy_bird/utils/pipe_data.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 

@@ -1,0 +1,1 @@
+enum ThornPosition { top, bottom }

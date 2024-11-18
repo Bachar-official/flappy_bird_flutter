@@ -1,12 +1,12 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flappy_bird/components/enemies/thorn.dart';
 import 'package:flappy_bird/components/environment/ceiling.dart';
 import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flutter/animation.dart';
 
 import 'environment/ground.dart';
-import 'pipe.dart';
 
 class Bird extends SpriteAnimationComponent
     with HasGameReference<FlappyBirdGame>, CollisionCallbacks {
@@ -93,7 +93,7 @@ class Bird extends SpriteAnimationComponent
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    if (other is Pipe) {
+    if (other is Thorn) {
       game.overlays.add('gameOver');
       game.pauseEngine();
     }
