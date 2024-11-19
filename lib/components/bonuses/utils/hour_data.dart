@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 class HourData {
   final double time;
   final int score;
@@ -8,15 +5,16 @@ class HourData {
 
   const HourData({required this.score, required this.pos, required this.time});
 
-  factory HourData.fromJson(Map<String, dynamic> json) => HourData(
-        score: json['score'],
-        pos: json['pos'],
-        time: json['time'],
+  factory HourData.fromJson(Map<String, dynamic> json) {
+    if (json
+        case {'score': int score, 'pos': double pos, 'time': double time}) {
+      return HourData(
+        score: score,
+        pos: pos,
+        time: time,
       );
-}
-
-Future<List<HourData>> loadHours(String path) async {
-  final jsonStrFile = File(path);
-  final List<dynamic> data = json.decode(jsonStrFile.readAsStringSync());
-  return data.map((e) => HourData.fromJson(e)).toList();
+    } else {
+      throw const FormatException('Invalid JSON format for \'hours\' field');
+    }
+  }
 }

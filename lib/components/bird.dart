@@ -1,11 +1,10 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flappy_bird/components/bonuses/hour.dart';
+import 'package:flappy_bird/components/bonuses/finish.dart';
 import 'package:flappy_bird/components/enemies/thorn.dart';
 import 'package:flappy_bird/components/environment/ceiling.dart';
 import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
-import 'package:flutter/animation.dart';
 
 import 'environment/ground.dart';
 
@@ -47,7 +46,8 @@ class Bird extends SpriteAnimationComponent
 
     flyAnimation.loop = false;
     animation = idleAnimation;
-    size = Vector2(50, 40);
+    final ySize = (game.size.y - Config.groundHeight - Config.ceilingHeight) / 6;
+    size = Vector2(ySize, ySize * 4 / 5);
 
     add(CircleHitbox());
   }
@@ -93,8 +93,8 @@ class Bird extends SpriteAnimationComponent
   }
 
   @override
-  void onCollision(Set<Vector2> points, PositionComponent other) {
-    if (other is Thorn) {
+  void onCollision(intersectionPoints, other) {
+    if (other is Thorn || other is Finish) {
       game.overlays.add('gameOver');
       game.pauseEngine();
     }
@@ -112,11 +112,7 @@ class Bird extends SpriteAnimationComponent
       velocity.y = 0;
     }
 
-    // Проверка коллизии с часами
-    if (other is Hour) {
-      game.score += other.score;
-    }
-    super.onCollision(points, other);
+    super.onCollision(intersectionPoints, other);
   }
 
   void reset() {

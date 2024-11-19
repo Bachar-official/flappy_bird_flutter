@@ -1,0 +1,17 @@
+{
+    "thorns": [
+        {
+            "time": 1.0,
+            "height": 1.0,
+            "bottom": false
+        }
+    ],
+    "hours": [
+        {
+            "time": 1.0,
+            "pos": 10.0,
+            "score": 15
+        }
+    ],
+    "finishAt": 5.0
+}
