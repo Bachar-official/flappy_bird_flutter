@@ -6,6 +6,8 @@ import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/utils/calculate_volume.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
+import 'package:waveform_recorder/waveform_recorder.dart';
+// import 'package:record/record.dart';
 
 class MainScreen extends StatefulWidget {
   final FlappyBirdGame game;
@@ -19,9 +21,8 @@ class _MainScreenState extends State<MainScreen> {
   double triggerCoefficient = 1;
   final TextEditingController nameC = TextEditingController(text: '');
   StreamController<bool> controller = StreamController.broadcast();
-  final record = AudioRecorder();
-  late final Stream audioStream;
   bool triggered = false;
+  final waveC = WaveformRecorderController(interval: const Duration(milliseconds: 2));
 
   @override
   void initState() {
@@ -31,15 +32,26 @@ class _MainScreenState extends State<MainScreen> {
     nameC.addListener(() => setState(() {}));
     setStream();
     readData();
+    l();
+  }
+
+  void l() async {
+    await waveC.startRecording();
+    // waveC.amplitudeStream.listen((event) {
+    //   print(event);
+    // });
+    await for (var a in waveC.amplitudeStream) {
+      print(a.current);
+    }
   }
 
   void setStream() async {
-    audioStream = await record.startStream(const RecordConfig(
-        encoder: AudioEncoder.pcm16bits, noiseSuppress: true));
-    await for (var a in audioStream) {
-      var value = 1000 / calculateVolume(a) * triggerCoefficient;
-      controller.add(value > 10);
-    }
+    // audioStream = await record.startStream(const RecordConfig(
+    //     encoder: AudioEncoder.pcm16bits, noiseSuppress: true));
+    // await for (var a in audioStream) {
+    //   var value = 1000 / calculateVolume(a) * triggerCoefficient;
+    //   controller.add(value > 10);
+    // }
   }
 
   void readLevel() async {
