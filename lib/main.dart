@@ -17,8 +17,13 @@ void main() {
           'mainMenu',
         ],
         overlayBuilderMap: {
-          'mainMenu': (context, _) => MainScreen(game: game),
-          'gameOver': (context, _) => GameOverScreen(game: game, scoreBoard: scoreBoard,),
+          'mainMenu': (context, _) => MainScreen(
+                game: game,
+              ),
+          'gameOver': (context, _) => GameOverScreen(
+                game: game,
+                scoreBoard: scoreBoard,
+              ),
         },
       ),
     ),

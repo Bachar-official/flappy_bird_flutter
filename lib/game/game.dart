@@ -3,10 +3,8 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flappy_bird/components/bonuses/finish.dart';
 import 'package:flappy_bird/components/bonuses/hour.dart';
-import 'package:flappy_bird/components/bonuses/utils/hour_data.dart';
 import 'package:flappy_bird/components/enemies/thorn.dart';
 import 'package:flappy_bird/components/enemies/thorn_position.dart';
-import 'package:flappy_bird/components/enemies/utils/thorn_data.dart';
 import 'package:flappy_bird/components/environment/background.dart';
 import 'package:flappy_bird/components/bird.dart';
 import 'package:flappy_bird/components/environment/ceiling_group.dart';
@@ -14,10 +12,11 @@ import 'package:flappy_bird/components/cloud_group.dart';
 import 'package:flappy_bird/components/environment/ground_group.dart';
 import 'package:flappy_bird/components/levels/level.dart';
 import 'package:flappy_bird/game/config.dart';
-import 'package:flutter/material.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late Bird _bird;
+  Stream<double>? stream;
+  double threshold = -20.0;
 
   Timer interval = Timer(Config.pipeInterval, repeat: true);
   Timer groundInterval = Timer(0.25, repeat: true);
@@ -29,13 +28,8 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   bool isFirstTime = true;
 
   void setPlayerName(String name) => playerName = name;
-  void setAudioStream(Stream<bool> stream) async {
-    // await for (var event in stream) {
-    //   if (event) {
-    //     _bird.jump();
-    //   }
-    // }
-  }
+  void setThreshold(double value) => threshold = value;
+  void setAudioStream(Stream<double> stream) => this.stream = stream;
   void setLevel(Level level) {
     this.level = level;
     initializeGame();
@@ -115,7 +109,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
             ),
           );
         },
-        
       );
       add(hourTimer);
     }
@@ -133,6 +126,12 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     add(
       finishTimer,
     );
+
+    if (stream != null) {
+      stream!.listen((event) {
+        _bird.voice(event, threshold);
+      });
+    }
 
     isFirstTime = false;
   }

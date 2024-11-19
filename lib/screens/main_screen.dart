@@ -3,11 +3,8 @@ import 'dart:async';
 import 'package:flappy_bird/components/levels/level.dart';
 import 'package:flappy_bird/components/song_button.dart';
 import 'package:flappy_bird/game/game.dart';
-import 'package:flappy_bird/utils/calculate_volume.dart';
 import 'package:flutter/material.dart';
-import 'package:record/record.dart';
 import 'package:waveform_recorder/waveform_recorder.dart';
-// import 'package:record/record.dart';
 
 class MainScreen extends StatefulWidget {
   final FlappyBirdGame game;
@@ -20,47 +17,70 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   double triggerCoefficient = 1;
   final TextEditingController nameC = TextEditingController(text: '');
-  StreamController<bool> controller = StreamController.broadcast();
+  StreamController<double> controller = StreamController.broadcast();
   bool triggered = false;
-  final waveC = WaveformRecorderController(interval: const Duration(milliseconds: 2));
+  final waveC =
+      WaveformRecorderController(interval: const Duration(milliseconds: 2));
+  double threshold = -20;
+  bool isRecording = false;
+  Color sliderColor = Colors.red;
 
   @override
   void initState() {
     super.initState();
     widget.game.pauseEngine();
-    readLevel();
     nameC.addListener(() => setState(() {}));
     setStream();
-    readData();
-    l();
-  }
-
-  void l() async {
-    await waveC.startRecording();
-    // waveC.amplitudeStream.listen((event) {
-    //   print(event);
-    // });
-    await for (var a in waveC.amplitudeStream) {
-      print(a.current);
-    }
   }
 
   void setStream() async {
-    // audioStream = await record.startStream(const RecordConfig(
-    //     encoder: AudioEncoder.pcm16bits, noiseSuppress: true));
-    // await for (var a in audioStream) {
-    //   var value = 1000 / calculateVolume(a) * triggerCoefficient;
-    //   controller.add(value > 10);
-    // }
+    await waveC.startRecording();
+    isRecording = true;
+    await for (var a in waveC.amplitudeStream) {
+      if (a.current <= -1) {
+        controller.sink.add(a.current);
+      }
+
+      if (mounted) {
+        setSliderColor(a.current, threshold);
+      }
+    }
   }
 
-  void readLevel() async {
+  void setThreshold(double value) {
+    threshold = value;
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void setSliderColor(double value, double threshold) {
+    if (context.mounted) {
+      if (value > threshold) {
+        sliderColor = Colors.green;
+      } else {
+        sliderColor = Colors.red;
+      }
+      setState(() {});
+    }
+  }
+
+  void startGame() async {
+    widget.game.setAudioStream(controller.stream);
+    widget.game.setThreshold(threshold);
+    widget.game.setPlayerName(nameC.value.text);
+    widget.game.overlays.remove('mainMenu');
+    widget.game.resumeEngine();
+
     try {
       var lvl = await loadLevel('level1.json');
       widget.game.setLevel(lvl);
-
-      // widget.game.setAudioStream(controller.stream);
     } catch (e) {
+      widget.game.overlays.add('mainMenu');
+      widget.game.pauseEngine();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
@@ -69,12 +89,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       );
-    }
-  }
-
-  void readData() async {
-    await for (var a in controller.stream) {
-      // print(a);
     }
   }
 
@@ -122,13 +136,7 @@ class _MainScreenState extends State<MainScreen> {
                 controller: nameC,
               ),
               ElevatedButton(
-                onPressed: nameC.value.text.isEmpty
-                    ? null
-                    : () {
-                        widget.game.overlays.remove('mainMenu');
-                        widget.game.setPlayerName(nameC.value.text);
-                        widget.game.resumeEngine();
-                      },
+                onPressed: nameC.value.text.isEmpty ? null : startGame,
                 child: const Text('Начать игру'),
               ),
               Expanded(
@@ -144,30 +152,14 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               Slider(
-                min: 0.5,
-                max: 2.0,
-                value: triggerCoefficient,
-                onChanged: (value) =>
-                    setState(() => triggerCoefficient = value),
+                thumbColor: sliderColor,
+                activeColor: sliderColor,
+                min: -50.0,
+                max: 0.0,
+                value: threshold,
+                onChanged: setThreshold,
               ),
               const Text('Порог срабатывания'),
-              StreamBuilder(
-                stream: controller.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: ColoredBox(
-                        color:
-                            snapshot.data ?? false ? Colors.green : Colors.red,
-                      ),
-                    );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
-              ),
             ],
           ),
         ),

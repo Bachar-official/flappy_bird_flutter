@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flappy_bird/components/bonuses/finish.dart';
@@ -46,7 +48,8 @@ class Bird extends SpriteAnimationComponent
 
     flyAnimation.loop = false;
     animation = idleAnimation;
-    final ySize = (game.size.y - Config.groundHeight - Config.ceilingHeight) / 6;
+    final ySize =
+        (game.size.y - Config.groundHeight - Config.ceilingHeight) / 6;
     size = Vector2(ySize, ySize * 4 / 5);
 
     add(CircleHitbox());
@@ -67,6 +70,13 @@ class Bird extends SpriteAnimationComponent
     isOnGround = false;
     velocity.y =
         -Config.gravity; // Устанавливаем отрицательную скорость для прыжка
+    playAnimation();
+  }
+
+  void voice(double value, double threshold) {
+    final valueRatio = (value - threshold) / (-1 - threshold);
+    final yRange = game.size.y - Config.groundHeight - Config.ceilingHeight;
+    position.y = yRange - (yRange * valueRatio + Config.groundHeight);
     playAnimation();
   }
 
