@@ -20,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
   final TextEditingController nameC = TextEditingController(text: '');
   StreamController<bool> controller = StreamController.broadcast();
   final record = AudioRecorder();
-  // late final Stream audioStream;
+  late final Stream audioStream;
   bool triggered = false;
 
   @override
@@ -34,18 +34,20 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void setStream() async {
-    // audioStream = await record.startStream(const RecordConfig(
-    //     encoder: AudioEncoder.pcm16bits, noiseSuppress: true));
-    // await for (var a in audioStream) {
-    //   var value = 1000 / calculateVolume(a) * triggerCoefficient;
-    //   controller.add(value > 10);
-    // }
+    audioStream = await record.startStream(const RecordConfig(
+        encoder: AudioEncoder.pcm16bits, noiseSuppress: true));
+    await for (var a in audioStream) {
+      var value = 1000 / calculateVolume(a) * triggerCoefficient;
+      controller.add(value > 10);
+    }
   }
 
   void readLevel() async {
     try {
       var lvl = await loadLevel('level1.json');
       widget.game.setLevel(lvl);
+
+      // widget.game.setAudioStream(controller.stream);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -113,7 +115,6 @@ class _MainScreenState extends State<MainScreen> {
                     : () {
                         widget.game.overlays.remove('mainMenu');
                         widget.game.setPlayerName(nameC.value.text);
-                        // widget.game.setAudioStream(audioStream);
                         widget.game.resumeEngine();
                       },
                 child: const Text('Начать игру'),
@@ -146,7 +147,8 @@ class _MainScreenState extends State<MainScreen> {
                       width: 100,
                       height: 100,
                       child: ColoredBox(
-                        color: snapshot.data ?? false ? Colors.green : Colors.red,
+                        color:
+                            snapshot.data ?? false ? Colors.green : Colors.red,
                       ),
                     );
                   } else {
