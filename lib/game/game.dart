@@ -29,9 +29,9 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   bool isFirstTime = true;
 
   void setPlayerName(String name) => playerName = name;
-  void setAudioStream(Stream<dynamic> stream) async {
+  void setAudioStream(Stream<bool> stream) async {
     // await for (var event in stream) {
-    //   if (calculateVolume(event) < 140) {
+    //   if (event) {
     //     _bird.jump();
     //   }
     // }
