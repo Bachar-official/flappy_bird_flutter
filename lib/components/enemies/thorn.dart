@@ -39,6 +39,7 @@ class Thorn extends SpriteComponent with HasGameRef<FlappyBirdGame> {
 
     if (position.x < -(game.size.x + 50)) {
       removeFromParent();
+      game.remove(this);
     }
   }
 }

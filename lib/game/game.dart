@@ -101,13 +101,12 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
 
     for (var hour in level?.hours ?? []) {
       final hourTimer = TimerComponent(
-        key: ComponentKey.unique(),
         period: hour.time,
         repeat: false,
+        removeOnFinish: true,
         onTick: () {
           add(
             Hour(
-              key: ComponentKey.unique(),
               score: hour.score,
               yPos: (size.y - Config.ceilingHeight - Config.groundHeight) -
                   (size.y - Config.ceilingHeight - Config.groundHeight) /
@@ -116,6 +115,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
             ),
           );
         },
+        
       );
       add(hourTimer);
     }
@@ -157,6 +157,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     playerName = '';
     removeAll(children);
     _bird.parent == null;
-    initializeGame();
+    remove(_bird);
   }
 }

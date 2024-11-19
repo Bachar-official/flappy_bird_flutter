@@ -17,7 +17,8 @@ class Hour extends SpriteComponent
     final img30 = gameRef.images.fromCache('hours-30.png');
     final img45 = gameRef.images.fromCache('hours-45.png');
     final img60 = gameRef.images.fromCache('hours-60.png');
-    final hourSize = (gameRef.size.y - Config.groundHeight - Config.ceilingHeight) / 15;
+    final hourSize =
+        (gameRef.size.y - Config.groundHeight - Config.ceilingHeight) / 15;
     size = Vector2(hourSize, hourSize);
     position.x = gameRef.size.x;
     position.y = yPos;
@@ -46,7 +47,8 @@ class Hour extends SpriteComponent
     if (other is Bird) {
       game.score += score;
       removeFromParent();
-    }   
+      game.remove(this);
+    }
   }
 
   @override
@@ -56,6 +58,7 @@ class Hour extends SpriteComponent
 
     if (position.x < -(game.size.x + size.x)) {
       removeFromParent();
+      game.remove(this);
     }
   }
 }
