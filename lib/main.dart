@@ -11,6 +11,9 @@ void main() {
   List<Score> scoreBoard = [];
   runApp(
     MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Bip',
+      ),
       home: GameWidget(
         game: game,
         initialActiveOverlays: const [

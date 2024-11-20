@@ -13,5 +13,8 @@
             "score": 15
         }
     ],
-    "finishAt": 10.0
+    "finishAt": 10.0,
+    "music": "level1.mp3",
+    "author": "КиШ",
+    "song": "Ели мясо мужики"
 }

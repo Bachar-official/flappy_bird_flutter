@@ -20,6 +20,7 @@ class _GameOverScreenState extends State<GameOverScreen> {
     widget.scoreBoard.add(Score(widget.game.playerName, widget.game.score));
     widget.scoreBoard.sort((Score a, Score b) => b.score.compareTo(a.score));
     widget.game.reset();
+    widget.game.stopBackgroundMusic();
   }
 
   @override

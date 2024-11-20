@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flappy_bird/components/bonuses/finish.dart';
 import 'package:flappy_bird/components/bonuses/hour.dart';
 import 'package:flappy_bird/components/enemies/thorn.dart';
@@ -35,6 +38,18 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     initializeGame();
   }
 
+  Future<void> playBackgroundMusic() async {
+    if (level != null) {
+      final file = File(level!.music);
+      final bytes = await file.readAsBytes();
+      await FlameAudio.bgm.audioPlayer.play(BytesSource(bytes), volume: 0.2);
+    }
+  }
+
+  Future<void> stopBackgroundMusic() async {
+    await FlameAudio.bgm.audioPlayer.stop();
+  }
+
   @override
   Future<void> onLoad() async {
     await images.loadAll([
@@ -53,6 +68,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     ]);
 
     camera.viewfinder.anchor = Anchor.topLeft;
+    FlameAudio.bgm.initialize();
   }
 
   void initializeGame() {

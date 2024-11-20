@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flappy_bird/components/levels/level.dart';
 import 'package:flappy_bird/components/song_button.dart';
+import 'package:flappy_bird/entity/song.dart';
 import 'package:flappy_bird/game/game.dart';
+import 'package:flappy_bird/utils/get_json_files.dart';
 import 'package:flutter/material.dart';
 import 'package:waveform_recorder/waveform_recorder.dart';
 
@@ -24,6 +26,7 @@ class _MainScreenState extends State<MainScreen> {
   double threshold = -20;
   bool isRecording = false;
   Color sliderColor = Colors.red;
+  List<Song> songs = [];
 
   @override
   void initState() {
@@ -31,6 +34,10 @@ class _MainScreenState extends State<MainScreen> {
     widget.game.pauseEngine();
     nameC.addListener(() => setState(() {}));
     setStream();
+    getSongs().then((v) {
+      songs = v;
+      setState(() {});
+    });
   }
 
   void setStream() async {
@@ -68,7 +75,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void startGame() async {
+  void startGame(String fileName) async {
     widget.game.setAudioStream(controller.stream);
     widget.game.setThreshold(threshold);
     widget.game.setPlayerName(nameC.value.text);
@@ -76,8 +83,9 @@ class _MainScreenState extends State<MainScreen> {
     widget.game.resumeEngine();
 
     try {
-      var lvl = await loadLevel('level1.json');
+      var lvl = await loadLevel(fileName);
       widget.game.setLevel(lvl);
+      await widget.game.playBackgroundMusic();
     } catch (e) {
       widget.game.overlays.add('mainMenu');
       widget.game.pauseEngine();
@@ -91,34 +99,6 @@ class _MainScreenState extends State<MainScreen> {
       );
     }
   }
-
-  List<Widget> songs = [
-    SongButton(
-      group: 'На-на',
-      song: 'Фаина',
-      onTap: () {},
-    ),
-    SongButton(
-      group: 'Технология',
-      song: 'Нажми на кнопку',
-      onTap: () {},
-    ),
-    SongButton(
-      group: 'Кай Метов',
-      song: 'Position №1',
-      onTap: () {},
-    ),
-    SongButton(
-      group: 'Филипп Киркоров',
-      song: 'Зайка моя',
-      onTap: () {},
-    ),
-    SongButton(
-      group: 'Надежда Кадышева',
-      song: 'А я вовсе не колдунья',
-      onTap: () {},
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -135,10 +115,6 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 controller: nameC,
               ),
-              ElevatedButton(
-                onPressed: nameC.value.text.isEmpty ? null : startGame,
-                child: const Text('Начать игру'),
-              ),
               Expanded(
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -148,7 +124,14 @@ class _MainScreenState extends State<MainScreen> {
                     childAspectRatio: 2 / 1,
                   ),
                   itemCount: songs.length,
-                  itemBuilder: (context, index) => songs[index],
+                  itemBuilder: (context, index) => SongButton(
+                      group: songs[index].author,
+                      song: songs[index].song,
+                      onTap: nameC.text.isEmpty
+                          ? null
+                          : () {
+                              startGame(songs[index].fileName);
+                            }),
                 ),
               ),
               Slider(

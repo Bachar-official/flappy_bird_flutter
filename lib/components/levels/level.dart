@@ -8,19 +8,25 @@ class Level {
   final List<ThornData> thorns;
   final List<HourData> hours;
   final double finishAt;
+  final String music;
 
   const Level(
-      {required this.thorns, required this.hours, required this.finishAt});
+      {required this.thorns,
+      required this.hours,
+      required this.finishAt,
+      required this.music});
 
   factory Level.fromJson(Map<String, dynamic> json) {
     if (json['thorns'] == null ||
         json['hours'] == null ||
-        json['finishAt'] == null) {
+        json['finishAt'] == null ||
+        json['music'] == null) {
       throw const FormatException('Required field is missing');
     }
     if (json['thorns'] is! List ||
         json['hours'] is! List ||
-        json['finishAt'] is! double) {
+        json['finishAt'] is! double ||
+        json['music'] is! String) {
       throw const FormatException('Invalid thorns or hours format');
     }
     var thornsJson = List<Map<String, dynamic>>.from(json['thorns']);
@@ -29,6 +35,7 @@ class Level {
       thorns: (thornsJson).map((e) => ThornData.fromJson(e)).toList(),
       hours: (hoursJson).map((e) => HourData.fromJson(e)).toList(),
       finishAt: json['finishAt'],
+      music: json['music'],
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SongButton extends StatelessWidget {
   final String group;
   final String song;
-  final void Function() onTap;
+  final void Function()? onTap;
   const SongButton(
       {super.key,
       required this.group,
@@ -16,8 +16,10 @@ class SongButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Colors.blue, Colors.orange],
+          gradient: LinearGradient(
+            colors: onTap == null
+                ? [Colors.grey, Colors.white]
+                : [Colors.blue, Colors.orange],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -35,7 +37,8 @@ class SongButton extends StatelessWidget {
                   child: FittedBox(
                     child: Text(
                       group,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
