@@ -9,6 +9,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final game = FlappyBirdGame();
   List<Score> scoreBoard = [];
+  double threshold = -20.0;
+
+  void setThreshold(double value) => threshold = value;
+
   runApp(
     MaterialApp(
       theme: ThemeData(
@@ -22,6 +26,8 @@ void main() {
         overlayBuilderMap: {
           'mainMenu': (context, _) => MainScreen(
                 game: game,
+                threshold: threshold,
+                setThreshold: setThreshold,
               ),
           'gameOver': (context, _) => GameOverScreen(
                 game: game,

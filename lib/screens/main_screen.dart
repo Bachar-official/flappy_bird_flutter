@@ -10,7 +10,13 @@ import 'package:waveform_recorder/waveform_recorder.dart';
 
 class MainScreen extends StatefulWidget {
   final FlappyBirdGame game;
-  const MainScreen({super.key, required this.game});
+  double threshold;
+  final void Function(double) setThreshold;
+  MainScreen(
+      {super.key,
+      required this.game,
+      required this.threshold,
+      required this.setThreshold});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -31,6 +37,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    threshold = widget.threshold;
     widget.game.pauseEngine();
     nameC.addListener(() => setState(() {}));
     setStream();
@@ -55,6 +62,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void setThreshold(double value) {
+    widget.setThreshold(value);
     threshold = value;
     setState(() {});
   }
