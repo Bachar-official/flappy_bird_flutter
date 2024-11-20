@@ -13,8 +13,11 @@ import 'package:flappy_bird/components/bird.dart';
 import 'package:flappy_bird/components/environment/ceiling_group.dart';
 import 'package:flappy_bird/components/cloud_group.dart';
 import 'package:flappy_bird/components/environment/ground_group.dart';
+import 'package:flappy_bird/components/environment/lyrics.dart';
 import 'package:flappy_bird/components/levels/level.dart';
+import 'package:flappy_bird/components/levels/words.dart';
 import 'package:flappy_bird/game/config.dart';
+import 'package:flutter/material.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late Bird _bird;
@@ -82,6 +85,10 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       GroundGroup(),
       CeilingGroup(),
       Background(),
+      Lyrics(
+          words: level?.words ?? [],
+          startPosition: Vector2(size.x / 2, size.y - Config.groundHeight / 2),
+          verticalSpacing: 10.0),
       _bird,
     ]);
 

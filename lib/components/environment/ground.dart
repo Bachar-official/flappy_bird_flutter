@@ -10,6 +10,8 @@ class Ground extends SpriteComponent with HasGameRef<FlappyBirdGame> {
   Future<void> onLoad() async {
     sprite = Sprite(game.images.fromCache('ground.png'));
     size = Vector2(608, Config.groundHeight);
-    add(RectangleHitbox());
+    add(RectangleHitbox(
+      size: Vector2(608, Config.groundHeight + 100),
+    ));
   }
 }

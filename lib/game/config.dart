@@ -1,5 +1,5 @@
 abstract class Config {
-  static const groundHeight = 30.0;
+  static const groundHeight = 200.0;
   static const gameSpeed = 200.0;
   static const pipeInterval = 1.5;
   static const cloudHeight = 150.0;
