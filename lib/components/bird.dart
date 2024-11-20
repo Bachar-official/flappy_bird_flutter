@@ -74,9 +74,9 @@ class Bird extends SpriteAnimationComponent
   }
 
   void voice(double value, double threshold) {
+    isOnGround = false;
     final valueRatio = (value - threshold) / (-1 - threshold);
-    final yRange = game.size.y - Config.groundHeight - Config.ceilingHeight;
-    position.y = yRange - (yRange * valueRatio + Config.groundHeight);
+    velocity.y = -valueRatio * Config.gravity * 6;
     playAnimation();
   }
 
