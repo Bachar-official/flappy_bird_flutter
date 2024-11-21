@@ -13,14 +13,14 @@ class KaraokeComponent extends Component with HasGameRef<FlappyBirdGame> {
 
   double currentTime = 0.0;
   double spacing = 50.0;
-  final defaultRenderer = TextPaint(
+  var defaultRenderer = TextPaint(
     style: const TextStyle(
       fontSize: 40,
       color: Colors.white,
       fontWeight: FontWeight.bold,
     ),
   );
-  final highlihtRenderer = TextPaint(
+  var highlihtRenderer = TextPaint(
     style: const TextStyle(
       color: Color.fromARGB(255, 5, 52, 90),
       fontSize: 40,
@@ -31,6 +31,20 @@ class KaraokeComponent extends Component with HasGameRef<FlappyBirdGame> {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    defaultRenderer = TextPaint(
+      style: TextStyle(
+        fontSize: gameRef.size.y / 100 * 5,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+    highlihtRenderer = TextPaint(
+      style: TextStyle(
+        color: const Color.fromARGB(255, 5, 52, 90),
+        fontSize: gameRef.size.y / 100 * 5,
+        fontWeight: FontWeight.bold,
+      ),
+    );
     line0 = TextComponent(text: '', textRenderer: defaultRenderer)
       ..position = position
       ..anchor = Anchor.center; // Позиция строки 0

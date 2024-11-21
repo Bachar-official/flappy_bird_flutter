@@ -91,7 +91,7 @@ class _MainScreenState extends State<MainScreen> {
     widget.game.resumeEngine();
 
     try {
-      var lvl = await loadLevel(fileName);
+      var lvl = await loadLevel('levels/$fileName');
       widget.game.setLevel(lvl);
       await widget.game.playBackgroundMusic();
     } catch (e) {

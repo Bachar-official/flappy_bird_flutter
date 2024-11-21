@@ -41,7 +41,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
 
   Future<void> playBackgroundMusic() async {
     if (level != null) {
-      final file = File(level!.music);
+      final file = File('levels/${level!.music}');
       final bytes = await file.readAsBytes();
       await FlameAudio.bgm.audioPlayer.play(BytesSource(bytes), volume: 0.2);
     }
@@ -86,7 +86,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       CeilingGroup(),
       KaraokeComponent(
           wordsList: level?.words ?? [],
-          position: Vector2(size.x / 2, size.y - Config.groundHeight / 2)),
+          position: Vector2(size.x / 2, size.y - (size.y / 5) / 2)),
       _bird,
     ]);
 
