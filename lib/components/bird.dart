@@ -89,8 +89,8 @@ class Bird extends SpriteAnimationComponent
     position.y += velocity.y * dt;
 
     // Проверяем, не находится ли персонаж ниже уровня земли
-    if (position.y >= game.size.y - Config.groundHeight - size.y / 2) {
-      position.y = game.size.y - Config.groundHeight - size.y / 2;
+    if (position.y >= game.size.y - (game.size.y / 5) - size.y / 2) {
+      position.y = game.size.y - (game.size.y / 5) - size.y / 2;
       isOnGround = true;
       velocity.y = 0;
     }

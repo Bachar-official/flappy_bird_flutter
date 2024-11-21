@@ -8,16 +8,14 @@ import 'package:flappy_bird/components/bonuses/finish.dart';
 import 'package:flappy_bird/components/bonuses/hour.dart';
 import 'package:flappy_bird/components/enemies/thorn.dart';
 import 'package:flappy_bird/components/enemies/thorn_position.dart';
-import 'package:flappy_bird/components/environment/background.dart';
 import 'package:flappy_bird/components/bird.dart';
 import 'package:flappy_bird/components/environment/ceiling_group.dart';
 import 'package:flappy_bird/components/cloud_group.dart';
 import 'package:flappy_bird/components/environment/ground_group.dart';
-import 'package:flappy_bird/components/environment/lyrics.dart';
+import 'package:flappy_bird/components/environment/karaoke_component.dart';
+import 'package:flappy_bird/components/environment/winter_background.dart';
 import 'package:flappy_bird/components/levels/level.dart';
-import 'package:flappy_bird/components/levels/words.dart';
 import 'package:flappy_bird/game/config.dart';
-import 'package:flutter/material.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late Bird _bird;
@@ -68,6 +66,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       'hours-45.png',
       'hours-60.png',
       'finish.png',
+      'winter_background.png',
     ]);
 
     camera.viewfinder.anchor = Anchor.topLeft;
@@ -82,13 +81,12 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     }
 
     addAll([
+      WinterBackground(),
       GroundGroup(),
       CeilingGroup(),
-      Background(),
-      Lyrics(
-          words: level?.words ?? [],
-          startPosition: Vector2(size.x / 2, size.y - Config.groundHeight / 2),
-          verticalSpacing: 10.0),
+      KaraokeComponent(
+          wordsList: level?.words ?? [],
+          position: Vector2(size.x / 2, size.y - Config.groundHeight / 2)),
       _bird,
     ]);
 

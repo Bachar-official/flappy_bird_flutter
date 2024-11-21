@@ -13,9 +13,18 @@ class Scoreboard extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50),
           child: ListTile(
-            leading: Text((index + 1).toString()),
-            title: Text(scoreBoard[index].name),
-            subtitle: Text(scoreBoard[index].score.toString()),
+            leading: Text(
+              (index + 1).toString(),
+            ),
+            title: Text(
+              scoreBoard[index].name,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 40),
+            ),
+            subtitle: Text(
+              scoreBoard[index].score.toString(),
+              textAlign: TextAlign.center,
+            ),
           ),
         );
       },

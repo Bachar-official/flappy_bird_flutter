@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flappy_bird/entity/song.dart';
 
 Future<List<File>> getJsonFiles() async {
-  final dir = Directory('./');
+  final dir = Directory('./levels');
   if (dir.existsSync()) {
     return dir
         .listSync()

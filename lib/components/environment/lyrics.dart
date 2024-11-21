@@ -9,16 +9,18 @@ class Lyrics extends Component with HasGameRef<FlappyBirdGame> {
   final double verticalSpacing; // Расстояние между строками
   final Vector2 startPosition; // Начальная позиция первой строки
 
-  double elapsedTime = 0; // Текущее время
-  int currentWordIndex = 0; // Индекс текущего слова
-
-  final List<TextComponent> textLines = []; // Текущие строки на экране
+  // Текущие строки на экране
 
   Lyrics({
     required this.words,
     required this.startPosition,
     this.verticalSpacing = 10.0,
   });
+
+  double elapsedTime = 0; // Текущее время
+  int currentWordIndex = 0; // Индекс текущего слова
+
+  final List<TextComponent> textLines = [];
 
   @override
   Future<void> onLoad() async {
@@ -52,33 +54,5 @@ class Lyrics extends Component with HasGameRef<FlappyBirdGame> {
 
     // Обновляем текущее время
     elapsedTime += dt;
-
-    // Проверяем, нужно ли обновить строки
-    while (currentWordIndex < words.length &&
-        elapsedTime >= words[currentWordIndex].start) {
-      // Выбираем строку для отображения текста
-      final lineIndex = currentWordIndex % 2;
-
-      // Обновляем текст строки
-      textLines[lineIndex].text = words[currentWordIndex].text;
-
-      // Очистка другой строки
-      final otherLineIndex = (lineIndex + 1) % 2;
-      if (currentWordIndex > 0 &&
-          elapsedTime >= words[currentWordIndex - 1].end) {
-        textLines[otherLineIndex].text = '';
-      }
-
-      // Переходим к следующему слову
-      currentWordIndex++;
-    }
-
-    // Убираем текст, если его время истекло
-    for (int i = 0; i < textLines.length; i++) {
-      if (currentWordIndex > i &&
-          elapsedTime >= words[currentWordIndex - (i + 1)].end) {
-        textLines[i].text = '';
-      }
-    }
   }
 }

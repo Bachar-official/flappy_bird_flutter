@@ -97,14 +97,16 @@ class _MainScreenState extends State<MainScreen> {
     } catch (e) {
       widget.game.overlays.add('mainMenu');
       widget.game.pauseEngine();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(
-            e.toString(),
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              e.toString(),
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
   }
 
