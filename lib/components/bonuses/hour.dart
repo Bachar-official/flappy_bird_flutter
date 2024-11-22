@@ -1,15 +1,15 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flappy_bird/components/bird.dart';
+import 'package:flappy_bird/components/bonuses/utils/hour_data.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flappy_bird/game/game.dart';
 
 class Hour extends SpriteComponent
     with HasGameRef<FlappyBirdGame>, CollisionCallbacks {
-  final int score;
-  final double yPos;
+  final HourData data;
 
-  Hour({required this.score, required this.yPos, super.key});
+  Hour({required this.data, super.key});
 
   @override
   Future<void> onLoad() async {
@@ -17,13 +17,12 @@ class Hour extends SpriteComponent
     final img30 = gameRef.images.fromCache('hours-30.png');
     final img45 = gameRef.images.fromCache('hours-45.png');
     final img60 = gameRef.images.fromCache('hours-60.png');
-    final hourSize =
-        (gameRef.size.y - Config.groundHeight - Config.ceilingHeight) / 15;
+    final hourSize = Config.groundHeight(gameRef) / 15;
     size = Vector2(hourSize, hourSize);
     position.x = gameRef.size.x;
-    position.y = yPos;
+    position.y = Config.getHeightPercentage(game, data.pos);
 
-    switch (score) {
+    switch (data.score) {
       case 30:
         sprite = Sprite(img30);
         break;
@@ -45,7 +44,7 @@ class Hour extends SpriteComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
     if (other is Bird) {
-      game.score += score;
+      game.score += data.score;
       removeFromParent();
       game.remove(this);
     }

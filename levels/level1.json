@@ -1,15 +1,22 @@
 {
     "thorns": [
         {
-            "time": 1.0,
-            "height": 1.0,
-            "bottom": false
+            "time": 2.0,
+            "duration": 2.0,
+            "label": "забыл",
+            "y": 50
+        },
+        {
+            "time": 5.0,
+            "duration": 1.0,
+            "label": "забил",
+            "y": 30
         }
     ],
     "hours": [
         {
             "time": 1.0,
-            "pos": 10.0,
+            "pos": 50.0,
             "score": 15
         }
     ],

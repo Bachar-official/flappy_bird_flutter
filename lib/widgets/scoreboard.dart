@@ -22,7 +22,7 @@ class Scoreboard extends StatelessWidget {
               style: const TextStyle(fontSize: 40),
             ),
             subtitle: Text(
-              scoreBoard[index].score.toString(),
+              (scoreBoard[index].score / 60).toStringAsFixed(2),
               textAlign: TextAlign.center,
             ),
           ),

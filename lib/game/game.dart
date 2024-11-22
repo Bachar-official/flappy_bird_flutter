@@ -7,10 +7,10 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flappy_bird/components/bonuses/finish.dart';
 import 'package:flappy_bird/components/bonuses/hour.dart';
 import 'package:flappy_bird/components/enemies/thorn.dart';
-import 'package:flappy_bird/components/enemies/thorn_position.dart';
 import 'package:flappy_bird/components/bird.dart';
 import 'package:flappy_bird/components/environment/ceiling_group.dart';
 import 'package:flappy_bird/components/cloud_group.dart';
+import 'package:flappy_bird/components/environment/current_score.dart';
 import 'package:flappy_bird/components/environment/ground_group.dart';
 import 'package:flappy_bird/components/environment/karaoke_component.dart';
 import 'package:flappy_bird/components/environment/winter_background.dart';
@@ -27,6 +27,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   Timer cloudInterval = Timer(2, repeat: true);
   Timer scoreTimer = Timer(1, repeat: true);
   int score = 0;
+  final CurrentScore _currentScore = CurrentScore(0);
   String playerName = '';
   Level? level;
   bool isFirstTime = true;
@@ -67,6 +68,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       'hours-60.png',
       'finish.png',
       'winter_background.png',
+      'block.png',
     ]);
 
     camera.viewfinder.anchor = Anchor.topLeft;
@@ -88,6 +90,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
           wordsList: level?.words ?? [],
           position: Vector2(size.x / 2, size.y - (size.y / 5) / 2)),
       _bird,
+      _currentScore,
     ]);
 
     cloudInterval.onTick = () => add(
@@ -102,11 +105,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
         onTick: () {
           add(
             Thorn(
-              thornPosition:
-                  thorn.bottom ? ThornPosition.bottom : ThornPosition.top,
-              height: thorn.height *
-                  (size.y - Config.ceilingHeight - Config.groundHeight) /
-                  100,
+              thorn: thorn,
             ),
           );
         },
@@ -122,11 +121,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
         onTick: () {
           add(
             Hour(
-              score: hour.score,
-              yPos: (size.y - Config.ceilingHeight - Config.groundHeight) -
-                  (size.y - Config.ceilingHeight - Config.groundHeight) /
-                      100 *
-                      hour.pos,
+              data: hour,
             ),
           );
         },
@@ -169,6 +164,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     groundInterval.update(dt);
     cloudInterval.update(dt);
     scoreTimer.update(dt);
+    _currentScore.setScore(score);
   }
 
   void reset() {
@@ -177,6 +173,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     playerName = '';
     removeAll(children);
     _bird.parent == null;
+    _currentScore.parent == null;
     remove(_bird);
   }
 }

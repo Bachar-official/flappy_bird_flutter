@@ -48,8 +48,7 @@ class Bird extends SpriteAnimationComponent
 
     flyAnimation.loop = false;
     animation = idleAnimation;
-    final ySize =
-        (game.size.y - Config.groundHeight - Config.ceilingHeight) / 6;
+    final ySize = Config.groundHeight(game) / 6;
     size = Vector2(ySize, ySize * 4 / 5);
 
     add(CircleHitbox());

@@ -19,7 +19,7 @@ class GroundGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
     for (int i = 0; i < numGrounds; i++) {
       // Размещаем землю по оси X, чтобы она заполнила экран.
       var ground = Ground();
-      ground.position = Vector2(i * 608, gameRef.size.y - gameRef.size.y / 5);
+      ground.position = Vector2(i * 608, Config.groundHeight(gameRef));
       grounds.add(ground);
       add(ground); // Добавляем компонент земли на экран
     }
@@ -37,8 +37,8 @@ class GroundGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
     // Когда все компоненты земли покидают экран, перемещаем их в конец.
     if (grounds.isNotEmpty && grounds.first.position.x < -608) {
       var firstGround = grounds.removeAt(0);
-      firstGround.position = Vector2(
-          grounds.last.position.x + 608, gameRef.size.y - Config.groundHeight);
+      firstGround.position =
+          Vector2(grounds.last.position.x + 608, Config.groundHeight(gameRef));
       grounds.add(firstGround);
     }
   }
