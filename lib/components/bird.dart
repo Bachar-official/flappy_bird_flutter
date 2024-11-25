@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flappy_bird/components/bonuses/finish.dart';
@@ -7,8 +5,6 @@ import 'package:flappy_bird/components/enemies/thorn.dart';
 import 'package:flappy_bird/components/environment/ceiling.dart';
 import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/game/config.dart';
-
-import 'environment/ground.dart';
 
 class Bird extends SpriteAnimationComponent
     with HasGameReference<FlappyBirdGame>, CollisionCallbacks {
@@ -23,6 +19,11 @@ class Bird extends SpriteAnimationComponent
   Vector2 velocity = Vector2.zero();
   double jumpStrength = -400; // Увеличиваем силу прыжка
   bool isOnGround = false;
+  double get currentHeight => getCurrentHeight();
+
+  double getCurrentHeight() {
+    return Config.getHeightAbsolute(game, position.y, size.y);
+  }
 
   @override
   void onLoad() {
@@ -75,7 +76,8 @@ class Bird extends SpriteAnimationComponent
   void voice(double value, double threshold) {
     isOnGround = false;
     final valueRatio = (value - threshold) / (-1 - threshold);
-    velocity.y = -valueRatio * Config.gravity * 6;
+    // velocity.y = -valueRatio * Config.gravity * 6;
+    velocity.y = -valueRatio * Config.gravity * 2;
     playAnimation();
   }
 
@@ -106,12 +108,6 @@ class Bird extends SpriteAnimationComponent
     if (other is Thorn || other is Finish) {
       game.overlays.add('gameOver');
       game.pauseEngine();
-    }
-
-    // Проверка коллизии с землёй
-    if (other is Ground) {
-      isOnGround = true;
-      velocity.y = 0;
     }
 
     // Проверка коллизии с потолком

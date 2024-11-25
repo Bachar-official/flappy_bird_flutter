@@ -16,8 +16,11 @@ import 'package:flappy_bird/components/environment/karaoke_component.dart';
 import 'package:flappy_bird/components/environment/winter_background.dart';
 import 'package:flappy_bird/components/levels/level.dart';
 import 'package:flappy_bird/game/config.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
+class FlappyBirdGame extends FlameGame
+    with TapDetector, HasCollisionDetection, KeyboardEvents {
   late Bird _bird;
   Stream<double>? stream;
   double threshold = -20.0;
@@ -31,6 +34,8 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   String playerName = '';
   Level? level;
   bool isFirstTime = true;
+  double time = 0;
+  final File markersFile = File('markers.txt');
 
   void setPlayerName(String name) => playerName = name;
   void setThreshold(double value) => threshold = value;
@@ -57,7 +62,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     await images.loadAll([
       'bird.png',
       'ground.png',
-      'background.png',
       'cloud.png',
       'ceiling.png',
       'thorn.png',
@@ -73,6 +77,9 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
 
     camera.viewfinder.anchor = Anchor.topLeft;
     FlameAudio.bgm.initialize();
+    if (!await markersFile.exists()) {
+      await markersFile.create(recursive: true);
+    }
   }
 
   void initializeGame() {
@@ -81,6 +88,8 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
         position: Vector2(128, 128),
       );
     }
+
+    markersFile.writeAsStringSync('');
 
     addAll([
       WinterBackground(),
@@ -145,7 +154,9 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
 
     if (stream != null) {
       stream!.listen((event) {
-        _bird.voice(event, threshold);
+        if (event > threshold) {
+          _bird.voice(event, threshold);
+        }
       });
     }
 
@@ -154,22 +165,26 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
 
   @override
   void onTap() {
-    _bird.jump();
+    markersFile.writeAsStringSync(
+        'time: $time, birdPosition: ${_bird.currentHeight}\n',
+        mode: FileMode.append);
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+    time += dt;
     interval.update(dt);
     groundInterval.update(dt);
     cloudInterval.update(dt);
     scoreTimer.update(dt);
-    _currentScore.setScore(score);
+    _currentScore.setScore(score, newTime: time);
   }
 
   void reset() {
     _bird.reset();
     score = 0;
+    time = 0;
     playerName = '';
     removeAll(children);
     _bird.parent == null;

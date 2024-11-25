@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 class CurrentScore extends TextComponent with HasGameRef<FlappyBirdGame> {
   int score;
+  double? time;
 
-  CurrentScore(this.score, {super.key});
+  CurrentScore(this.score, {super.key, this.time});
 
   @override
   Future<void> onLoad() async {
@@ -24,11 +25,11 @@ class CurrentScore extends TextComponent with HasGameRef<FlappyBirdGame> {
     );
   }
 
-  String getText() =>
-      text = 'Количество списанных часов: ${(score / 60).toStringAsFixed(2)}';
+  String getText({double? newTime}) => text =
+      'Количество списанных часов: ${(score / 60).toStringAsFixed(2)} ${newTime != null ? 'Время: ${newTime.toStringAsFixed(2)}' : ''}';
 
-  void setScore(int newScore) {
+  void setScore(int newScore, {double? newTime}) {
     score = newScore;
-    getText();
+    getText(newTime: newTime);
   }
 }

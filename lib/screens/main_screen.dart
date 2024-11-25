@@ -30,6 +30,7 @@ class _MainScreenState extends State<MainScreen> {
   final waveC =
       WaveformRecorderController(interval: const Duration(milliseconds: 2));
   double threshold = -20;
+  double amp = -60;
   bool isRecording = false;
   Color sliderColor = Colors.red;
   List<Song> songs = [];
@@ -51,14 +52,18 @@ class _MainScreenState extends State<MainScreen> {
     await waveC.startRecording();
     isRecording = true;
     await for (var a in waveC.amplitudeStream) {
-      if (a.current <= -1) {
-        controller.sink.add(a.current);
-      }
+      controller.sink.add(a.current);
 
       if (mounted) {
         setSliderColor(a.current, threshold);
+        setAmp(a.current);
       }
     }
+  }
+
+  void setAmp(double value) {
+    amp = value;
+    setState(() {});
   }
 
   void setThreshold(double value) {
@@ -153,6 +158,10 @@ class _MainScreenState extends State<MainScreen> {
                 onChanged: setThreshold,
               ),
               const Text('Порог срабатывания'),
+              LinearProgressIndicator(
+                minHeight: 10,
+                value: (amp + 60) / 60,
+              ),
             ],
           ),
         ),
