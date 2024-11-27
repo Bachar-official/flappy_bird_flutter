@@ -76,7 +76,6 @@ class Bird extends SpriteAnimationComponent
   void voice(double value, double threshold) {
     isOnGround = false;
     final valueRatio = (value - threshold) / (-1 - threshold);
-    // velocity.y = -valueRatio * Config.gravity * 6;
     velocity.y = -valueRatio * Config.gravity * 2;
     playAnimation();
   }
@@ -105,7 +104,10 @@ class Bird extends SpriteAnimationComponent
 
   @override
   void onCollision(intersectionPoints, other) {
-    if (other is Thorn || other is Finish) {
+    if (other is Thorn) {
+      game.score = 0;
+    }
+    if (other is Finish) {
       game.overlays.add('gameOver');
       game.pauseEngine();
     }

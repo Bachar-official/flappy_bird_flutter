@@ -166,7 +166,7 @@ class FlappyBirdGame extends FlameGame
   @override
   void onTap() {
     markersFile.writeAsStringSync(
-        'time: $time, birdPosition: ${_bird.currentHeight}\n',
+        'time: ${time.toStringAsFixed(2)}, birdPosition: ${_bird.currentHeight.toStringAsFixed(2)}\n',
         mode: FileMode.append);
   }
 
