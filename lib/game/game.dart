@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flappy_bird/components/bonuses/finish.dart';
 import 'package:flappy_bird/components/bonuses/hour.dart';
 import 'package:flappy_bird/components/enemies/thorn.dart';
@@ -34,6 +34,7 @@ class FlappyBirdGame extends FlameGame
   bool isFirstTime = true;
   double time = 0;
   final File markersFile = File('markers.txt');
+  final player = AudioPlayer();
 
   void setPlayerName(String name) => playerName = name;
   void setThreshold(double value) => threshold = value;
@@ -47,12 +48,12 @@ class FlappyBirdGame extends FlameGame
     if (level != null) {
       final file = File('levels/${level!.music}');
       final bytes = await file.readAsBytes();
-      await FlameAudio.bgm.audioPlayer.play(BytesSource(bytes), volume: 0.2);
+      await player.play(BytesSource(bytes));
     }
   }
 
   Future<void> stopBackgroundMusic() async {
-    await FlameAudio.bgm.audioPlayer.stop();
+    await player.stop();
   }
 
   @override
@@ -74,7 +75,6 @@ class FlappyBirdGame extends FlameGame
     ]);
 
     camera.viewfinder.anchor = Anchor.topLeft;
-    FlameAudio.bgm.initialize();
     if (!await markersFile.exists()) {
       await markersFile.create(recursive: true);
     }
