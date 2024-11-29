@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/parallax.dart';
-import 'package:flappy_bird/game/config.dart';
 
 class WinterBackground extends ParallaxComponent {
   WinterBackground();

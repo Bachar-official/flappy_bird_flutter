@@ -24,6 +24,11 @@ abstract class Config {
     return relativeHeight * 100;
   }
 
+  /// Рассчитываем позицию X для входа в игру, чтобы объекты появлялись в начале игры
+  static double getInitialPosition(FlappyBirdGame game, double objectTime) {
+    return (objectTime - game.time) * gameSpeed;
+  }
+
   static const gameSpeed = 200.0;
   static const pipeInterval = 1.5;
   static const cloudHeight = 150.0;

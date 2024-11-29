@@ -8,6 +8,7 @@ import 'package:flappy_bird/utils/get_json_files.dart';
 import 'package:flutter/material.dart';
 import 'package:waveform_recorder/waveform_recorder.dart';
 
+// ignore: must_be_immutable
 class MainScreen extends StatefulWidget {
   final FlappyBirdGame game;
   double threshold;

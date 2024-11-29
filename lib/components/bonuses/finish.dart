@@ -13,7 +13,8 @@ class Finish extends SpriteComponent
     final ySize = Config.groundHeight(game);
     final xSize = ySize / 4;
     size = Vector2(xSize, ySize);
-    position.x = gameRef.size.x;
+    position.x =
+        Config.getInitialPosition(game, gameRef.level?.finishAt ?? 1) + xSize;
     position.y = Config.ceilingHeight;
     add(RectangleHitbox());
   }

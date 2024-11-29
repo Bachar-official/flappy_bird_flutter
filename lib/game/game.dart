@@ -16,8 +16,6 @@ import 'package:flappy_bird/components/environment/karaoke_component.dart';
 import 'package:flappy_bird/components/environment/winter_background.dart';
 import 'package:flappy_bird/components/levels/level.dart';
 import 'package:flappy_bird/game/config.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class FlappyBirdGame extends FlameGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
@@ -100,6 +98,7 @@ class FlappyBirdGame extends FlameGame
           position: Vector2(size.x / 2, size.y - (size.y / 5) / 2)),
       _bird,
       _currentScore,
+      Finish(),
     ]);
 
     cloudInterval.onTick = () => add(
@@ -107,50 +106,20 @@ class FlappyBirdGame extends FlameGame
         );
 
     for (var thorn in level?.thorns ?? []) {
-      final thornTimer = TimerComponent(
-        period: thorn.time,
-        removeOnFinish: true,
-        repeat: false,
-        onTick: () {
-          add(
-            Thorn(
-              thorn: thorn,
-            ),
-          );
-        },
+      add(
+        Thorn(
+          thorn: thorn,
+        ),
       );
-      add(thornTimer);
     }
 
     for (var hour in level?.hours ?? []) {
-      final hourTimer = TimerComponent(
-        period: hour.time,
-        repeat: false,
-        removeOnFinish: true,
-        onTick: () {
-          add(
-            Hour(
-              data: hour,
-            ),
-          );
-        },
+      add(
+        Hour(
+          data: hour,
+        ),
       );
-      add(hourTimer);
     }
-
-    final finishTimer = TimerComponent(
-      period: level?.finishAt ?? 0,
-      repeat: false,
-      removeOnFinish: true,
-      onTick: () {
-        add(
-          Finish(),
-        );
-      },
-    );
-    add(
-      finishTimer,
-    );
 
     if (stream != null) {
       stream!.listen((event) {

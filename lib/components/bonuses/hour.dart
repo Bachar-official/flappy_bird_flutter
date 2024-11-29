@@ -19,7 +19,7 @@ class Hour extends SpriteComponent
     final img60 = gameRef.images.fromCache('hours-60.png');
     final hourSize = Config.groundHeight(gameRef) / 15;
     size = Vector2(hourSize, hourSize);
-    position.x = gameRef.size.x;
+    position.x = Config.getInitialPosition(game, data.time);
     position.y = Config.getHeightPercentage(game, data.pos);
 
     switch (data.score) {

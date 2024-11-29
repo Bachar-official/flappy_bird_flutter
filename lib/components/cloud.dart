@@ -2,7 +2,6 @@ import 'package:flame/components.dart';
 import 'package:flappy_bird/game/game.dart';
 
 class Cloud extends SpriteComponent with HasGameReference<FlappyBirdGame> {
-  @override
   final double yPos;
 
   Cloud({required this.yPos});

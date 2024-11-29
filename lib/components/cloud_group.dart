@@ -13,7 +13,6 @@ class CloudGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
   @override
   void onLoad() {
     position.x = gameRef.size.x;
-    final heightMinusClouds = gameRef.size.y - Config.cloudHeight;
     priority = 3;
     add(Cloud(yPos: rnd.nextDouble() * Config.cloudHeight));
   }

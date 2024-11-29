@@ -18,7 +18,8 @@ class Thorn extends SpriteComponent with HasGameRef<FlappyBirdGame> {
     var ySize = Config.groundHeight(gameRef) / 6;
     size.y = ySize;
     position.y = Config.getHeightPercentage(gameRef, thorn.y.toDouble());
-    position.x = gameRef.size.x;
+    // position.x = gameRef.size.x;
+    position.x = Config.getInitialPosition(game, thorn.time);
 
     // Создаем TextPaint для рендеринга текста
     final textPaint = TextPaint(
