@@ -44,7 +44,11 @@ class Hour extends SpriteComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
     if (other is Bird) {
-      game.score += data.score;
+      if (game.score >= 2400) {
+        game.score += 2 * data.score;
+      } else {
+        game.score += data.score;
+      }
       removeFromParent();
       game.remove(this);
     }
