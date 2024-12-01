@@ -22,6 +22,7 @@ class FlappyBirdGame extends FlameGame
   late Bird _bird;
   Stream<double>? stream;
   double threshold = -20.0;
+  double volume = .5;
 
   Timer interval = Timer(Config.pipeInterval, repeat: true);
   Timer groundInterval = Timer(0.25, repeat: true);
@@ -38,6 +39,7 @@ class FlappyBirdGame extends FlameGame
 
   void setPlayerName(String name) => playerName = name;
   void setThreshold(double value) => threshold = value;
+  void setVolume(double value) => volume = value;
   void setAudioStream(Stream<double> stream) => this.stream = stream;
   void setLevel(Level level) {
     this.level = level;
@@ -48,6 +50,7 @@ class FlappyBirdGame extends FlameGame
     if (level != null) {
       final file = File('levels/${level!.music}');
       final bytes = await file.readAsBytes();
+      await player.setVolume(volume);
       await player.play(BytesSource(bytes));
     }
   }

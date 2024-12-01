@@ -10,8 +10,10 @@ void main() {
   final game = FlappyBirdGame();
   List<Score> scoreBoard = [];
   double threshold = -20.0;
+  double volume = .5;
 
   void setThreshold(double value) => threshold = value;
+  void setVolume(double value) => volume = value;
 
   runApp(
     MaterialApp(
@@ -27,7 +29,9 @@ void main() {
           'mainMenu': (context, _) => MainScreen(
                 game: game,
                 threshold: threshold,
+                volume: volume,
                 setThreshold: setThreshold,
+                setVolume: setVolume,
               ),
           'gameOver': (context, _) => GameOverScreen(
                 game: game,

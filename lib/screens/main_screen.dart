@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flappy_bird/components/levels/level.dart';
 import 'package:flappy_bird/components/song_button.dart';
 import 'package:flappy_bird/entity/song.dart';
@@ -12,11 +13,15 @@ import 'package:waveform_recorder/waveform_recorder.dart';
 class MainScreen extends StatefulWidget {
   final FlappyBirdGame game;
   double threshold;
+  double volume;
   final void Function(double) setThreshold;
+  final void Function(double) setVolume;
   MainScreen(
       {super.key,
       required this.game,
       required this.threshold,
+      required this.volume,
+      required this.setVolume,
       required this.setThreshold});
 
   @override
@@ -31,15 +36,25 @@ class _MainScreenState extends State<MainScreen> {
   final waveC =
       WaveformRecorderController(interval: const Duration(milliseconds: 2));
   double threshold = -20;
+  double volume = .5;
   double amp = -60;
   bool isRecording = false;
   Color sliderColor = Colors.red;
   List<Song> songs = [];
+  late AudioPlayer player;
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
+    player = AudioPlayer();
     threshold = widget.threshold;
+    volume = widget.volume;
     widget.game.pauseEngine();
     nameC.addListener(() => setState(() {}));
     setStream();
@@ -73,9 +88,12 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {});
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void setVolume(double value) {
+    widget.setVolume(value);
+    volume = value;
+    player.setVolume(value);
+    player.play(AssetSource('audio/test.mp3'));
+    setState(() {});
   }
 
   void setSliderColor(double value, double threshold) {
@@ -92,6 +110,7 @@ class _MainScreenState extends State<MainScreen> {
   void startGame(String fileName) async {
     widget.game.setAudioStream(controller.stream);
     widget.game.setThreshold(threshold);
+    widget.game.setVolume(volume);
     widget.game.setPlayerName(nameC.value.text);
     widget.game.overlays.remove('mainMenu');
     widget.game.resumeEngine();
@@ -159,6 +178,13 @@ class _MainScreenState extends State<MainScreen> {
                 onChanged: setThreshold,
               ),
               const Text('Порог срабатывания'),
+              Slider(
+                min: .0,
+                max: 1.0,
+                value: volume,
+                onChanged: setVolume,
+              ),
+              const Text('Громкость'),
               LinearProgressIndicator(
                 minHeight: 10,
                 value: (amp + 60) / 60,
