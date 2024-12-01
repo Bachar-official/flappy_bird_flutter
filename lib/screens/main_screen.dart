@@ -62,6 +62,8 @@ class _MainScreenState extends State<MainScreen> {
       songs = v;
       setState(() {});
     });
+    player.setVolume(volume);
+    player.play(AssetSource('audio/test.mp3'));
   }
 
   void setStream() async {
@@ -92,7 +94,6 @@ class _MainScreenState extends State<MainScreen> {
     widget.setVolume(value);
     volume = value;
     player.setVolume(value);
-    player.play(AssetSource('audio/test.mp3'));
     setState(() {});
   }
 
