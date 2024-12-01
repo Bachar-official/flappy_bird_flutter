@@ -1,11 +1,13 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flappy_bird/components/bird.dart';
 import 'package:flappy_bird/components/enemies/utils/thorn_data.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flappy_bird/game/game.dart';
 import 'package:flutter/material.dart';
 
-class Thorn extends SpriteComponent with HasGameRef<FlappyBirdGame> {
+class Thorn extends SpriteComponent
+    with HasGameRef<FlappyBirdGame>, CollisionCallbacks {
   final ThornData thorn;
 
   Thorn({required this.thorn});
@@ -50,6 +52,15 @@ class Thorn extends SpriteComponent with HasGameRef<FlappyBirdGame> {
     position.x -= Config.gameSpeed * dt;
 
     if (position.x < -(game.size.x + thorn.duration)) {
+      removeFromParent();
+      game.remove(this);
+    }
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+    if (other is Bird) {
       removeFromParent();
       game.remove(this);
     }

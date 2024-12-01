@@ -1,9 +1,11 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flappy_bird/components/bird.dart';
 import 'package:flappy_bird/components/bonuses/utils/hour_data.dart';
 import 'package:flappy_bird/game/config.dart';
 import 'package:flappy_bird/game/game.dart';
+import 'package:flutter/material.dart';
 
 class Hour extends SpriteComponent
     with HasGameRef<FlappyBirdGame>, CollisionCallbacks {
@@ -40,6 +42,27 @@ class Hour extends SpriteComponent
     add(CircleHitbox());
   }
 
+  void flyAway() {
+    final screenWidth = gameRef.size.x;
+    final targetX = screenWidth * 0.75; // 75% от ширины экрана
+    final targetY = -size.y; // Улетает за верх экрана
+
+    // Анимация перемещения
+    add(
+      MoveEffect.to(
+        Vector2(targetX, targetY), // Целевая позиция
+        EffectController(
+          duration: 0.5, // Полсекунды
+          curve: Curves.linear, // Линейное движение
+        ),
+        onComplete: () {
+          // Удаление компонента после завершения движения
+          removeFromParent();
+        },
+      ),
+    );
+  }
+
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
@@ -49,8 +72,10 @@ class Hour extends SpriteComponent
       } else {
         game.score += data.score;
       }
-      removeFromParent();
-      game.remove(this);
+      gameRef.currentScore.scored();
+      flyAway();
+      // removeFromParent();
+      // game.remove(this);
     }
   }
 

@@ -29,7 +29,7 @@ class FlappyBirdGame extends FlameGame
   Timer cloudInterval = Timer(2, repeat: true);
   Timer scoreTimer = Timer(1, repeat: true);
   int score = 0;
-  final CurrentScore _currentScore = CurrentScore(0);
+  final CurrentScore currentScore = CurrentScore(0);
   String playerName = '';
   Level? level;
   bool isFirstTime = true;
@@ -66,8 +66,6 @@ class FlappyBirdGame extends FlameGame
       'ground.png',
       'cloud.png',
       'ceiling.png',
-      'thorn.png',
-      'thorn-rotated.png',
       'hours-15.png',
       'hours-30.png',
       'hours-45.png',
@@ -100,7 +98,7 @@ class FlappyBirdGame extends FlameGame
           wordsList: level?.words ?? [],
           position: Vector2(size.x / 2, size.y - (size.y / 5) / 2)),
       _bird,
-      _currentScore,
+      currentScore,
       Finish(),
     ]);
 
@@ -150,7 +148,7 @@ class FlappyBirdGame extends FlameGame
     groundInterval.update(dt);
     cloudInterval.update(dt);
     scoreTimer.update(dt);
-    _currentScore.setScore(score, newTime: time);
+    currentScore.setScore(score, newTime: time);
   }
 
   void reset() {
@@ -160,7 +158,7 @@ class FlappyBirdGame extends FlameGame
     playerName = '';
     removeAll(children);
     _bird.parent == null;
-    _currentScore.parent == null;
+    currentScore.parent == null;
     remove(_bird);
   }
 }

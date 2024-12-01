@@ -80,6 +80,13 @@ class Bird extends SpriteAnimationComponent
     playAnimation();
   }
 
+  void damage() {
+    opacity = 0.5;
+    Future.delayed(const Duration(seconds: 2), () {
+      opacity = 1;
+    });
+  }
+
   @override
   void update(double dt) {
     super.update(dt);
@@ -106,6 +113,8 @@ class Bird extends SpriteAnimationComponent
   void onCollision(intersectionPoints, other) {
     if (other is Thorn) {
       game.score = 0;
+      damage();
+      game.currentScore.damaged();
     }
     if (other is Finish) {
       game.overlays.add('gameOver');

@@ -25,6 +25,48 @@ class CurrentScore extends TextComponent with HasGameRef<FlappyBirdGame> {
     );
   }
 
+  void scored() {
+    textRenderer = TextPaint(
+      style: const TextStyle(
+        fontFamily: 'Bip',
+        fontSize: Config.ceilingHeight,
+        color: Colors.green,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+    Future.delayed(const Duration(seconds: 2), () {
+      textRenderer = TextPaint(
+        style: const TextStyle(
+          fontFamily: 'Bip',
+          fontSize: Config.ceilingHeight,
+          color: Color.fromARGB(255, 8, 57, 97),
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    });
+  }
+
+  void damaged() {
+    textRenderer = TextPaint(
+      style: const TextStyle(
+        fontFamily: 'Bip',
+        fontSize: Config.ceilingHeight,
+        color: Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+    Future.delayed(const Duration(seconds: 2), () {
+      textRenderer = TextPaint(
+        style: const TextStyle(
+          fontFamily: 'Bip',
+          fontSize: Config.ceilingHeight,
+          color: Color.fromARGB(255, 8, 57, 97),
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    });
+  }
+
   String getText({double? newTime}) => text =
       'Количество списанных часов: ${(score / 60).toStringAsFixed(2)} ${newTime != null ? 'Время: ${newTime.toStringAsFixed(2)}' : ''}';
 
