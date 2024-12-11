@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flappy_bird/components/levels/level.dart';
 import 'package:flappy_bird/components/song_button.dart';
 import 'package:flappy_bird/entity/song.dart';
+import 'package:flappy_bird/game/config.dart';
 import 'package:flappy_bird/game/game.dart';
 import 'package:flappy_bird/utils/get_json_files.dart';
 import 'package:flutter/material.dart';
@@ -117,6 +118,8 @@ class _MainScreenState extends State<MainScreen> {
     widget.game.resumeEngine();
 
     try {
+      final conf = await Config.getConfigFromFile();
+      widget.game.setConfig(conf);
       var lvl = await loadLevel('levels/$fileName');
       widget.game.setLevel(lvl);
       await widget.game.playBackgroundMusic();

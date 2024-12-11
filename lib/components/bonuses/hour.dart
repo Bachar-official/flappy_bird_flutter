@@ -10,8 +10,9 @@ import 'package:flutter/material.dart';
 class Hour extends SpriteComponent
     with HasGameRef<FlappyBirdGame>, CollisionCallbacks {
   final HourData data;
+  final Config config;
 
-  Hour({required this.data, super.key});
+  Hour({required this.data, super.key, required this.config});
 
   @override
   Future<void> onLoad() async {
@@ -19,10 +20,10 @@ class Hour extends SpriteComponent
     final img30 = gameRef.images.fromCache('hours-30.png');
     final img45 = gameRef.images.fromCache('hours-45.png');
     final img60 = gameRef.images.fromCache('hours-60.png');
-    final hourSize = Config.groundHeight(gameRef) / 15;
+    final hourSize = config.groundHeight(gameRef) / 15;
     size = Vector2(hourSize, hourSize);
-    position.x = Config.getInitialPosition(game, data.time);
-    position.y = Config.getHeightPercentage(game, data.pos);
+    position.x = config.getInitialPosition(game, data.time);
+    position.y = config.getHeightPercentage(game, data.pos);
 
     switch (data.score) {
       case 30:
@@ -82,7 +83,7 @@ class Hour extends SpriteComponent
   @override
   void update(dt) {
     super.update(dt);
-    position.x -= Config.gameSpeed * dt;
+    position.x -= config.gameSpeed * dt;
 
     if (position.x < -(game.size.x + size.x)) {
       removeFromParent();

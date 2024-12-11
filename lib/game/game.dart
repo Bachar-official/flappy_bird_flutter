@@ -20,16 +20,16 @@ import 'package:flappy_bird/game/config.dart';
 class FlappyBirdGame extends FlameGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
   late Bird _bird;
+  late Config config;
   Stream<double>? stream;
   double threshold = -20.0;
   double volume = .5;
 
-  Timer interval = Timer(Config.pipeInterval, repeat: true);
   Timer groundInterval = Timer(0.25, repeat: true);
   Timer cloudInterval = Timer(2, repeat: true);
   Timer scoreTimer = Timer(1, repeat: true);
   int score = 0;
-  final CurrentScore currentScore = CurrentScore(0);
+  late CurrentScore currentScore;
   String playerName = '';
   Level? level;
   bool isFirstTime = true;
@@ -41,6 +41,7 @@ class FlappyBirdGame extends FlameGame
   void setThreshold(double value) => threshold = value;
   void setVolume(double value) => volume = value;
   void setAudioStream(Stream<double> stream) => this.stream = stream;
+  void setConfig(Config config) => this.config = config;
   void setLevel(Level level) {
     this.level = level;
     initializeGame();
@@ -51,7 +52,9 @@ class FlappyBirdGame extends FlameGame
       final file = File('levels/${level!.music}');
       final bytes = await file.readAsBytes();
       await player.setVolume(volume);
-      await player.play(BytesSource(bytes));
+      await Future.delayed(Duration(milliseconds: config.startDelay), () async {
+        await player.play(BytesSource(bytes));
+      });      
     }
   }
 
@@ -84,32 +87,35 @@ class FlappyBirdGame extends FlameGame
   void initializeGame() {
     if (isFirstTime) {
       _bird = Bird(
+        config: config,
         position: Vector2(128, 128),
       );
+      currentScore = CurrentScore(0, config: config);
     }
 
     markersFile.writeAsStringSync('');
 
     addAll([
       WinterBackground(),
-      GroundGroup(),
-      CeilingGroup(),
+      GroundGroup(config: config),
+      CeilingGroup(config: config),
       KaraokeComponent(
           wordsList: level?.words ?? [],
           position: Vector2(size.x / 2, size.y - (size.y / 5) / 2)),
       _bird,
       currentScore,
-      Finish(),
+      Finish(config: config),
     ]);
 
     cloudInterval.onTick = () => add(
-          CloudGroup(),
+          CloudGroup(config: config),
         );
 
     for (var thorn in level?.thorns ?? []) {
       add(
         Thorn(
           thorn: thorn,
+          config: config
         ),
       );
     }
@@ -118,6 +124,7 @@ class FlappyBirdGame extends FlameGame
       add(
         Hour(
           data: hour,
+          config: config
         ),
       );
     }
@@ -144,7 +151,6 @@ class FlappyBirdGame extends FlameGame
   void update(double dt) {
     super.update(dt);
     time += dt;
-    interval.update(dt);
     groundInterval.update(dt);
     cloudInterval.update(dt);
     scoreTimer.update(dt);
@@ -160,5 +166,6 @@ class FlappyBirdGame extends FlameGame
     _bird.parent == null;
     currentScore.parent == null;
     remove(_bird);
+    remove(currentScore);
   }
 }

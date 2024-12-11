@@ -8,12 +8,13 @@ import 'package:flappy_bird/game/config.dart';
 
 class Bird extends SpriteAnimationComponent
     with HasGameReference<FlappyBirdGame>, CollisionCallbacks {
+      final Config config;
   bool isAnimating = false;
 
   late SpriteAnimation idleAnimation;
   late SpriteAnimation flyAnimation;
 
-  Bird({required super.position})
+  Bird({required super.position, required this.config})
       : super(size: Vector2.all(128), anchor: Anchor.center);
 
   Vector2 velocity = Vector2.zero();
@@ -22,7 +23,7 @@ class Bird extends SpriteAnimationComponent
   double get currentHeight => getCurrentHeight();
 
   double getCurrentHeight() {
-    return Config.getHeightAbsolute(game, position.y, size.y);
+    return config.getHeightAbsolute(game, position.y, size.y);
   }
 
   @override
@@ -49,7 +50,7 @@ class Bird extends SpriteAnimationComponent
 
     flyAnimation.loop = false;
     animation = idleAnimation;
-    final ySize = Config.groundHeight(game) / 6;
+    final ySize = config.groundHeight(game) / 6;
     size = Vector2(ySize, ySize * 4 / 5);
 
     add(CircleHitbox());
@@ -69,14 +70,14 @@ class Bird extends SpriteAnimationComponent
   void jump() {
     isOnGround = false;
     velocity.y =
-        -Config.gravity; // Устанавливаем отрицательную скорость для прыжка
+        -config.gravity; // Устанавливаем отрицательную скорость для прыжка
     playAnimation();
   }
 
   void voice(double value, double threshold) {
     isOnGround = false;
     final valueRatio = (value - threshold) / (-1 - threshold);
-    velocity.y = -valueRatio * Config.gravity * 2;
+    velocity.y = -valueRatio * config.gravity * 2;
     playAnimation();
   }
 
@@ -92,7 +93,7 @@ class Bird extends SpriteAnimationComponent
     super.update(dt);
 
     // Применяем гравитацию
-    velocity.y += Config.gravity * dt;
+    velocity.y += config.gravity * dt;
     position.y += velocity.y * dt;
 
     // Проверяем, не находится ли персонаж ниже уровня земли
@@ -103,8 +104,8 @@ class Bird extends SpriteAnimationComponent
     }
 
     // Проверка на столкновение с потолком (не даем птице выйти за пределы)
-    if (position.y <= Config.ceilingHeight + size.y / 2) {
-      position.y = Config.ceilingHeight + size.y / 2;
+    if (position.y <= config.ceilingHeight + size.y / 2) {
+      position.y = config.ceilingHeight + size.y / 2;
       velocity.y = 0;
     }
   }
@@ -124,7 +125,7 @@ class Bird extends SpriteAnimationComponent
     // Проверка коллизии с потолком
     if (other is Ceiling) {
       // Ограничиваем высоту птицы, если она столкнулась с потолком
-      position.y = Config.ceilingHeight + size.y / 2;
+      position.y = config.ceilingHeight + size.y / 2;
       velocity.y = 0;
     }
 

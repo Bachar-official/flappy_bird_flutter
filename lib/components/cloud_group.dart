@@ -6,7 +6,8 @@ import 'package:flappy_bird/game/config.dart';
 import 'package:flappy_bird/game/game.dart';
 
 class CloudGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
-  CloudGroup();
+  final Config config;
+  CloudGroup({required this.config});
 
   final rnd = Random();
 
@@ -14,13 +15,13 @@ class CloudGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
   void onLoad() {
     position.x = gameRef.size.x;
     priority = 3;
-    add(Cloud(yPos: rnd.nextDouble() * Config.cloudHeight));
+    add(Cloud(yPos: rnd.nextDouble() * config.cloudHeight));
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    position.x -= Config.gameSpeed * dt;
+    position.x -= config.gameSpeed * 0.5 * dt;
 
     if (position.x < -(gameRef.size.x + 50)) {
       removeFromParent();

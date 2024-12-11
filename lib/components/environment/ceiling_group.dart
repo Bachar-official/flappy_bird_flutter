@@ -5,8 +5,9 @@ import 'package:flappy_bird/game/game.dart';
 
 class CeilingGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
   late List<Ceiling> ceilings = [];
+  final Config config;
 
-  CeilingGroup();
+  CeilingGroup({required this.config});
 
   @override
   Future<void> onLoad() async {
@@ -14,7 +15,7 @@ class CeilingGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
     ceilings = [];
     int numCeilings = (gameRef.size.x / (50)).ceil();
     for (int i = 0; i < numCeilings; i++) {
-      var ceiling = Ceiling();
+      var ceiling = Ceiling(config: config);
       ceiling.position = Vector2(i * 50, 0);
       ceilings.add(ceiling);
       add(ceiling);
@@ -26,7 +27,7 @@ class CeilingGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
     super.update(dt);
 
     for (var ceiling in ceilings) {
-      ceiling.position.x -= Config.gameSpeed * dt;
+      ceiling.position.x -= config.gameSpeed * dt;
     }
 
     if (ceilings.isNotEmpty && ceilings.first.position.x < -50) {

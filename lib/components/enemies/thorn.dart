@@ -9,19 +9,19 @@ import 'package:flutter/material.dart';
 class Thorn extends SpriteComponent
     with HasGameRef<FlappyBirdGame>, CollisionCallbacks {
   final ThornData thorn;
+  final Config config;
 
-  Thorn({required this.thorn});
+  Thorn({required this.thorn, required this.config});
 
   @override
   Future<void> onLoad() async {
     final image = game.images.fromCache('block.png');
     sprite = Sprite(image);
-    size.x = thorn.duration * Config.gameSpeed;
-    var ySize = Config.groundHeight(gameRef) / 6;
+    size.x = thorn.duration * config.gameSpeed;
+    var ySize = config.groundHeight(gameRef) / 6;
     size.y = ySize;
-    position.y = Config.getHeightPercentage(gameRef, thorn.y.toDouble());
-    // position.x = gameRef.size.x;
-    position.x = Config.getInitialPosition(game, thorn.time);
+    position.y = config.getHeightPercentage(gameRef, thorn.y.toDouble());
+    position.x = config.getInitialPosition(game, thorn.time);
 
     // Создаем TextPaint для рендеринга текста
     final textPaint = TextPaint(
@@ -49,7 +49,7 @@ class Thorn extends SpriteComponent
   @override
   void update(double dt) {
     super.update(dt);
-    position.x -= Config.gameSpeed * dt;
+    position.x -= config.gameSpeed * dt;
 
     if (position.x < -(game.size.x + thorn.duration)) {
       removeFromParent();

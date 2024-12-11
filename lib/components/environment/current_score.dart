@@ -6,20 +6,21 @@ import 'package:flutter/material.dart';
 class CurrentScore extends TextComponent with HasGameRef<FlappyBirdGame> {
   int score;
   double? time;
+  final Config config;
 
-  CurrentScore(this.score, {super.key, this.time});
+  CurrentScore(this.score, {super.key, this.time, required this.config});
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
     anchor = Anchor.topCenter;
-    position = Vector2(gameRef.size.x / 2, -Config.ceilingHeight / 4);
+    position = Vector2(gameRef.size.x / 2, -config.ceilingHeight / 4);
     text = 'Количество списанных часов: ${(score / 60).toStringAsFixed(2)}';
     textRenderer = TextPaint(
-      style: const TextStyle(
+      style: TextStyle(
         fontFamily: 'Bip',
-        fontSize: Config.ceilingHeight,
-        color: Color.fromARGB(255, 8, 57, 97),
+        fontSize: config.ceilingHeight,
+        color: const Color.fromARGB(255, 8, 57, 97),
         fontWeight: FontWeight.bold,
       ),
     );
@@ -27,19 +28,19 @@ class CurrentScore extends TextComponent with HasGameRef<FlappyBirdGame> {
 
   void scored() {
     textRenderer = TextPaint(
-      style: const TextStyle(
+      style: TextStyle(
         fontFamily: 'Bip',
-        fontSize: Config.ceilingHeight,
+        fontSize: config.ceilingHeight,
         color: Colors.green,
         fontWeight: FontWeight.bold,
       ),
     );
     Future.delayed(const Duration(seconds: 2), () {
       textRenderer = TextPaint(
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Bip',
-          fontSize: Config.ceilingHeight,
-          color: Color.fromARGB(255, 8, 57, 97),
+          fontSize: config.ceilingHeight,
+          color: const Color.fromARGB(255, 8, 57, 97),
           fontWeight: FontWeight.bold,
         ),
       );
@@ -48,19 +49,19 @@ class CurrentScore extends TextComponent with HasGameRef<FlappyBirdGame> {
 
   void damaged() {
     textRenderer = TextPaint(
-      style: const TextStyle(
+      style: TextStyle(
         fontFamily: 'Bip',
-        fontSize: Config.ceilingHeight,
+        fontSize: config.ceilingHeight,
         color: Colors.red,
         fontWeight: FontWeight.bold,
       ),
     );
     Future.delayed(const Duration(seconds: 2), () {
       textRenderer = TextPaint(
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Bip',
-          fontSize: Config.ceilingHeight,
-          color: Color.fromARGB(255, 8, 57, 97),
+          fontSize: config.ceilingHeight,
+          color: const Color.fromARGB(255, 8, 57, 97),
           fontWeight: FontWeight.bold,
         ),
       );
