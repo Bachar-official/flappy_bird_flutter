@@ -68,8 +68,8 @@ class CurrentScore extends TextComponent with HasGameRef<FlappyBirdGame> {
     });
   }
 
-  String getText({double? newTime}) => text =
-      'Количество списанных часов: ${(score / 60).toStringAsFixed(2)} ${newTime != null ? 'Время: ${newTime.toStringAsFixed(2)}' : ''}';
+  String getText({double? newTime}) =>
+      text = 'Количество списанных часов: ${(score / 60).toStringAsFixed(2)}';
 
   void setScore(int newScore, {double? newTime}) {
     score = newScore;

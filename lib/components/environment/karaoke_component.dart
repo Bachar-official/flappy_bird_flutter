@@ -33,53 +33,59 @@ class KaraokeComponent extends Component with HasGameRef<FlappyBirdGame> {
     super.onLoad();
     defaultRenderer = TextPaint(
       style: TextStyle(
-        fontSize: gameRef.size.y / 100 * 5,
-        color: const Color(0xFF808080),
-        fontWeight: FontWeight.bold,
-        shadows: const [
-        Shadow( // bottomLeft
-          offset: Offset(-1.5, -1.5),
-          color: Color(0xFFDDDDDD),
-        ),
-        Shadow( // bottomRight
-          offset: Offset(1.5, -1.5),
-          color: Color(0xFFDDDDDD),
-        ),
-        Shadow( // topRight
-          offset: Offset(1.5, 1.5),
-          color: Color(0xFFDDDDDD),
-        ),
-        Shadow( // topLeft
-          offset: Offset(-1.5, 1.5),
-          color: Color(0xFFDDDDDD),
-        ),
-      ]
-      ),
+          fontSize: gameRef.size.y / 100 * 5,
+          color: const Color(0xFF808080),
+          fontWeight: FontWeight.bold,
+          shadows: const [
+            Shadow(
+              // bottomLeft
+              offset: Offset(-1.5, -1.5),
+              color: Color(0xFFDDDDDD),
+            ),
+            Shadow(
+              // bottomRight
+              offset: Offset(1.5, -1.5),
+              color: Color(0xFFDDDDDD),
+            ),
+            Shadow(
+              // topRight
+              offset: Offset(1.5, 1.5),
+              color: Color(0xFFDDDDDD),
+            ),
+            Shadow(
+              // topLeft
+              offset: Offset(-1.5, 1.5),
+              color: Color(0xFFDDDDDD),
+            ),
+          ]),
     );
     highlihtRenderer = TextPaint(
       style: TextStyle(
-        color: const Color.fromARGB(255, 255, 176, 58),
-        fontSize: gameRef.size.y / 100 * 5,
-        fontWeight: FontWeight.bold,
-        shadows: const [
-        Shadow( // bottomLeft
-          offset: Offset(-1.5, -1.5),
-          color: Color(0xFFDDDDDD),
-        ),
-        Shadow( // bottomRight
-          offset: Offset(1.5, -1.5),
-          color: Color(0xFFDDDDDD),
-        ),
-        Shadow( // topRight
-          offset: Offset(1.5, 1.5),
-          color: Color(0xFFDDDDDD),
-        ),
-        Shadow( // topLeft
-          offset: Offset(-1.5, 1.5),
-          color: Color(0xFFDDDDDD),
-        ),
-      ]
-      ),
+          color: const Color.fromARGB(255, 219, 173, 103),
+          fontSize: gameRef.size.y / 100 * 5,
+          fontWeight: FontWeight.bold,
+          shadows: const [
+            Shadow(
+              // bottomLeft
+              offset: Offset(-0.5, -0.5),
+              color: Color(0xFFDDDDDD),
+            ),
+            Shadow(
+              // bottomRight
+              offset: Offset(0.5, -0.5),
+              color: Color(0xFFDDDDDD),
+            ),
+            Shadow(
+              // topRight
+              offset: Offset(0.5, 0.5),
+              color: Color(0xFFDDDDDD),
+            ),
+            Shadow(
+              // topLeft
+              offset: Offset(-0.5, 0.5),
+              color: Color(0xFFDDDDDD),
+            ),
+          ]),
     );
     line0 = TextComponent(text: '', textRenderer: defaultRenderer)
       ..position = position

@@ -54,7 +54,7 @@ class FlappyBirdGame extends FlameGame
       await player.setVolume(volume);
       await Future.delayed(Duration(milliseconds: config.startDelay), () async {
         await player.play(BytesSource(bytes));
-      });      
+      });
     }
   }
 
@@ -82,6 +82,8 @@ class FlappyBirdGame extends FlameGame
     if (!await markersFile.exists()) {
       await markersFile.create(recursive: true);
     }
+    config = await Config.getConfigFromFile();
+    currentScore = CurrentScore(0, config: config);
   }
 
   void initializeGame() {
@@ -107,25 +109,15 @@ class FlappyBirdGame extends FlameGame
       Finish(config: config),
     ]);
 
-    cloudInterval.onTick = () => add(
-          CloudGroup(config: config),
-        );
-
     for (var thorn in level?.thorns ?? []) {
       add(
-        Thorn(
-          thorn: thorn,
-          config: config
-        ),
+        Thorn(thorn: thorn, config: config),
       );
     }
 
     for (var hour in level?.hours ?? []) {
       add(
-        Hour(
-          data: hour,
-          config: config
-        ),
+        Hour(data: hour, config: config),
       );
     }
 

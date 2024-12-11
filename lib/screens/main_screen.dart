@@ -57,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
     threshold = widget.threshold;
     volume = widget.volume;
     widget.game.pauseEngine();
+    Config.getConfigFromFile().then((value) => widget.game.setConfig(value));
     nameC.addListener(() => setState(() {}));
     setStream();
     getSongs().then((v) {
@@ -118,8 +119,6 @@ class _MainScreenState extends State<MainScreen> {
     widget.game.resumeEngine();
 
     try {
-      final conf = await Config.getConfigFromFile();
-      widget.game.setConfig(conf);
       var lvl = await loadLevel('levels/$fileName');
       widget.game.setLevel(lvl);
       await widget.game.playBackgroundMusic();

@@ -21,7 +21,7 @@ class CloudGroup extends PositionComponent with HasGameRef<FlappyBirdGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    position.x -= config.gameSpeed * 0.5 * dt;
+    position.x -= config.gameSpeed * 0.25 * dt;
 
     if (position.x < -(gameRef.size.x + 50)) {
       removeFromParent();
