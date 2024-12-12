@@ -13,6 +13,10 @@ class KaraokeComponent extends Component with HasGameRef<FlappyBirdGame> {
 
   double currentTime = 0.0;
   double spacing = 50.0;
+
+  final highlightShadowColor = const Color(0xFF333333);
+  final shadowColor = const Color(0xFFDDDDDD);
+
   var defaultRenderer = TextPaint(
     style: const TextStyle(
       fontSize: 40,
@@ -36,54 +40,54 @@ class KaraokeComponent extends Component with HasGameRef<FlappyBirdGame> {
           fontSize: gameRef.size.y / 100 * 5,
           color: const Color(0xFF808080),
           fontWeight: FontWeight.bold,
-          shadows: const [
+          shadows: [
             Shadow(
               // bottomLeft
-              offset: Offset(-1.5, -1.5),
-              color: Color(0xFFDDDDDD),
+              offset: const Offset(-0.5, -0.5),
+              color: shadowColor,
             ),
             Shadow(
               // bottomRight
-              offset: Offset(1.5, -1.5),
-              color: Color(0xFFDDDDDD),
+              offset: const Offset(0.5, -0.5),
+              color: shadowColor,
             ),
             Shadow(
               // topRight
-              offset: Offset(1.5, 1.5),
-              color: Color(0xFFDDDDDD),
+              offset: const Offset(0.5, 0.5),
+              color: shadowColor,
             ),
             Shadow(
               // topLeft
-              offset: Offset(-1.5, 1.5),
-              color: Color(0xFFDDDDDD),
+              offset: const Offset(-0.5, 0.5),
+              color: shadowColor,
             ),
           ]),
     );
     highlihtRenderer = TextPaint(
       style: TextStyle(
-          color: const Color.fromARGB(255, 219, 173, 103),
+          color: const Color.fromARGB(255, 255, 165, 30),
           fontSize: gameRef.size.y / 100 * 5,
           fontWeight: FontWeight.bold,
-          shadows: const [
+          shadows: [
             Shadow(
               // bottomLeft
-              offset: Offset(-0.5, -0.5),
-              color: Color(0xFFDDDDDD),
+              offset: const Offset(-0.5, -0.5),
+              color: highlightShadowColor,
             ),
             Shadow(
               // bottomRight
-              offset: Offset(0.5, -0.5),
-              color: Color(0xFFDDDDDD),
+              offset: const Offset(0.5, -0.5),
+              color: highlightShadowColor,
             ),
             Shadow(
               // topRight
-              offset: Offset(0.5, 0.5),
-              color: Color(0xFFDDDDDD),
+              offset: const Offset(0.5, 0.5),
+              color: highlightShadowColor,
             ),
             Shadow(
               // topLeft
-              offset: Offset(-0.5, 0.5),
-              color: Color(0xFFDDDDDD),
+              offset: const Offset(-0.5, 0.5),
+              color: highlightShadowColor,
             ),
           ]),
     );
